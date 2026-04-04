@@ -341,47 +341,65 @@
         </div>
     </footer>
 
-    <script>
+    <!-- Firebase Scripts -->
+    <script src="firebase-config.js"></script>
+    <script type="module">
+        import { handleAuthState, logoutUser, saveHomeBooking } from './firebase-logic.js';
+
         // Initialize Lucide icons
         lucide.createIcons();
 
-        // Authentication Check
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        // Elements
         const authOverlay = document.getElementById('auth-restriction-overlay');
         const bookingFormContent = document.getElementById('booking-form-container');
         const navAuthLink = document.getElementById('nav-auth-link');
         const mobileAuthLink = document.getElementById('mobile-auth-link');
+        const bookingForm = document.getElementById('bookingForm');
+        const bookingFormContainer = document.getElementById('booking-form-container');
+        const resultsContainer = document.getElementById('results-container');
+        const successContainer = document.getElementById('success-container');
+        const dateInput = document.getElementById('home-date');
 
-        if (!isLoggedIn) {
-            authOverlay.classList.remove('hidden');
-            // Disable all inputs in the booking form
-            const inputs = bookingFormContent.querySelectorAll('input, button');
-            inputs.forEach(input => input.disabled = true);
-        } else {
-            navAuthLink.textContent = 'Logout';
-            navAuthLink.href = '#';
-            navAuthLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                localStorage.removeItem('isLoggedIn');
-                location.reload();
-            });
+        // Auth State Handling
+        handleAuthState(
+            (user) => {
+                // User is logged in
+                authOverlay.classList.add('hidden');
+                const inputs = bookingFormContent.querySelectorAll('input, button');
+                inputs.forEach(input => input.disabled = false);
 
-            if (mobileAuthLink) {
-                mobileAuthLink.textContent = 'Logout';
-                mobileAuthLink.href = '#';
-                mobileAuthLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    localStorage.removeItem('isLoggedIn');
-                    location.reload();
+                [navAuthLink, mobileAuthLink].forEach(link => {
+                    if (link) {
+                        link.textContent = 'Logout';
+                        link.href = '#';
+                        link.addEventListener('click', async (e) => {
+                            e.preventDefault();
+                            await logoutUser();
+                        });
+                    }
+                });
+            },
+            () => {
+                // User is logged out
+                authOverlay.classList.remove('hidden');
+                const inputs = bookingFormContent.querySelectorAll('input, button');
+                inputs.forEach(input => input.disabled = true);
+
+                [navAuthLink, mobileAuthLink].forEach(link => {
+                    if (link) {
+                        link.textContent = 'Login';
+                        link.href = 'auth/';
+                    }
                 });
             }
-        }
+        );
 
         // Set default date to today
-        const dateInput = document.getElementById('home-date');
         const today = new Date().toISOString().split('T')[0];
-        dateInput.value = today;
-        dateInput.min = today;
+        if (dateInput) {
+            dateInput.value = today;
+            dateInput.min = today;
+        }
 
         // Mobile Menu Toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -389,39 +407,36 @@
 
         mobileMenuButton.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
-            // Change icon between menu and x
             const icon = mobileMenuButton.querySelector('[data-lucide]');
             const isHidden = mobileMenu.classList.contains('hidden');
             icon.setAttribute('data-lucide', isHidden ? 'menu' : 'x');
             lucide.createIcons();
         });
 
-        // Handle form submission
-        const bookingForm = document.getElementById('bookingForm');
-        const bookingFormContainer = document.getElementById('booking-form-container');
-        const resultsContainer = document.getElementById('results-container');
-        const successContainer = document.getElementById('success-container');
+        // Booking Logic
+        let currentBookingData = null;
 
         bookingForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             // Capture Data for Summary
-            const pickup = document.getElementById('home-pickup').value;
-            const dropoff = document.getElementById('home-dropoff').value;
-            const date = document.getElementById('home-date').value;
-            const time = document.getElementById('home-time').value;
+            currentBookingData = {
+                pickupLocation: document.getElementById('home-pickup').value,
+                dropoffLocation: document.getElementById('home-dropoff').value,
+                date: document.getElementById('home-date').value,
+                time: document.getElementById('home-time').value
+            };
 
-            document.getElementById('home-summary-pickup').textContent = pickup;
-            document.getElementById('home-summary-dropoff').textContent = dropoff;
-            document.getElementById('home-summary-datetime').textContent = `${date} at ${time}`;
+            document.getElementById('home-summary-pickup').textContent = currentBookingData.pickupLocation;
+            document.getElementById('home-summary-dropoff').textContent = currentBookingData.dropoffLocation;
+            document.getElementById('home-summary-datetime').textContent = `${currentBookingData.date} at ${currentBookingData.time}`;
 
-            // Show loading state on button
+            // Show loading state
             const btn = this.querySelector('button[type="submit"]');
             btn.disabled = true;
             btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin mr-2"></i> Processing...';
             lucide.createIcons();
 
-            // Transition to Summary
             setTimeout(() => {
                 bookingFormContainer.classList.add('hidden');
                 resultsContainer.classList.remove('hidden');
@@ -429,38 +444,41 @@
             }, 800);
         });
 
-        // Edit details (go back to form)
         document.getElementById('edit-search').addEventListener('click', () => {
             resultsContainer.classList.add('hidden');
             bookingFormContainer.classList.remove('hidden');
-            
-            // Reset the submit button
             const btn = bookingForm.querySelector('button[type="submit"]');
             btn.disabled = false;
             btn.innerHTML = 'Book Now';
         });
 
-        // Final Confirm (Transition to Success with Tick)
-        document.getElementById('home-book-now').addEventListener('click', function() {
+        document.getElementById('home-book-now').addEventListener('click', async function() {
             const btn = this;
             btn.disabled = true;
             btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin mr-2"></i> Confirming...';
             lucide.createIcons();
 
-            setTimeout(() => {
+            try {
+                await saveHomeBooking(currentBookingData);
                 resultsContainer.classList.add('hidden');
                 successContainer.classList.remove('hidden');
                 lucide.createIcons();
-            }, 1200);
+            } catch (error) {
+                alert("Booking failed: " + error.message);
+                btn.disabled = false;
+                btn.innerHTML = 'Confirm Booking <i data-lucide="check-circle" class="ml-2 w-5 h-5"></i>';
+                lucide.createIcons();
+            }
         });
 
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
             });
         });
     </script>
