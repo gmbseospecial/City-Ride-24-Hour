@@ -141,16 +141,16 @@
                             <p class="text-gray-500 text-sm font-medium">Choose a ride that fits your comfort level</p>
                         </div>
                         <div class="grid grid-cols-1 gap-4 md:gap-6">
-                            <!-- Standard -->
+                            <!-- Economy -->
                             <label class="relative cursor-pointer group">
-                                <input type="radio" name="service" value="standard" class="peer sr-only" checked>
+                                <input type="radio" name="service" value="Economy" class="peer sr-only" checked>
                                 <div class="p-6 border-2 border-gray-100 rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50 flex items-center justify-between">
                                     <div class="flex items-center space-x-6">
                                         <div class="bg-gray-100 p-4 rounded-2xl group-hover:bg-white transition-colors">
                                             <i data-lucide="car" class="w-10 h-10 text-gray-400 group-hover:text-blue-500"></i>
                                         </div>
                                         <div>
-                                            <h4 class="font-black text-gray-900 uppercase tracking-tight text-lg">Standard</h4>
+                                            <h4 class="font-black text-gray-900 uppercase tracking-tight text-lg">Economy</h4>
                                             <div class="flex items-center space-x-4 text-xs text-gray-500 mt-1 font-bold uppercase tracking-widest">
                                                 <span class="flex items-center"><i data-lucide="users" class="w-3 h-3 mr-1"></i> 4 Seats</span>
                                                 <span class="flex items-center"><i data-lucide="briefcase" class="w-3 h-3 mr-1"></i> 2 Bags</span>
@@ -163,16 +163,16 @@
                                     </div>
                                 </div>
                             </label>
-                            <!-- Premium -->
+                            <!-- Business -->
                             <label class="relative cursor-pointer group">
-                                <input type="radio" name="service" value="premium" class="peer sr-only">
+                                <input type="radio" name="service" value="Business" class="peer sr-only">
                                 <div class="p-6 border-2 border-gray-100 rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50 flex items-center justify-between">
                                     <div class="flex items-center space-x-6">
                                         <div class="bg-gray-100 p-4 rounded-2xl group-hover:bg-white transition-colors">
                                             <i data-lucide="gem" class="w-10 h-10 text-gray-400 group-hover:text-blue-500"></i>
                                         </div>
                                         <div>
-                                            <h4 class="font-black text-gray-900 uppercase tracking-tight text-lg">Premium</h4>
+                                            <h4 class="font-black text-gray-900 uppercase tracking-tight text-lg">Business</h4>
                                             <div class="flex items-center space-x-4 text-xs text-gray-500 mt-1 font-bold uppercase tracking-widest">
                                                 <span class="flex items-center"><i data-lucide="users" class="w-3 h-3 mr-1"></i> 4 Seats</span>
                                                 <span class="flex items-center"><i data-lucide="briefcase" class="w-3 h-3 mr-1"></i> 3 Bags</span>
@@ -187,7 +187,7 @@
                             </label>
                             <!-- Van -->
                             <label class="relative cursor-pointer group">
-                                <input type="radio" name="service" value="van" class="peer sr-only">
+                                <input type="radio" name="service" value="Van" class="peer sr-only">
                                 <div class="p-6 border-2 border-gray-100 rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50 flex items-center justify-between">
                                     <div class="flex items-center space-x-6">
                                         <div class="bg-gray-100 p-4 rounded-2xl group-hover:bg-white transition-colors">
@@ -346,38 +346,53 @@
         </div>
     </footer>
 
-    <script>
+    <!-- Firebase Scripts -->
+    <script src="../firebase-config.js"></script>
+    <script type="module">
+        import { handleAuthState, logoutUser, saveLongBooking } from '../firebase-logic.js';
+
         lucide.createIcons();
 
         // Authentication & Navbar Logic
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         const authOverlay = document.getElementById('auth-restriction-overlay');
         const bookingCard = document.getElementById('booking-card');
         const navAuthLink = document.getElementById('nav-auth-link');
         const mobileAuthLink = document.getElementById('mobile-auth-link');
 
-        if (!isLoggedIn) {
-            if (authOverlay) authOverlay.classList.remove('hidden');
-            // Disable interactions on the booking card
-            if (bookingCard) {
-                const inputs = bookingCard.querySelectorAll('input, button');
-                inputs.forEach(input => input.disabled = true);
-            }
-        } else {
-            // Update Navigation for logged in user
-            [navAuthLink, mobileAuthLink].forEach(link => {
-                if (link) {
-                    link.textContent = 'Logout';
-                    link.href = '#';
-                    link.className = link.className.replace('text-blue-600', 'text-gray-600');
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        localStorage.removeItem('isLoggedIn');
-                        location.reload();
-                    });
+        handleAuthState(
+            (user) => {
+                // User is logged in
+                if (authOverlay) authOverlay.classList.add('hidden');
+                if (bookingCard) {
+                    const inputs = bookingCard.querySelectorAll('input, button');
+                    inputs.forEach(input => input.disabled = false);
                 }
-            });
-        }
+                [navAuthLink, mobileAuthLink].forEach(link => {
+                    if (link) {
+                        link.textContent = 'Logout';
+                        link.href = '#';
+                        link.addEventListener('click', async (e) => {
+                            e.preventDefault();
+                            await logoutUser();
+                        });
+                    }
+                });
+            },
+            () => {
+                // User is logged out
+                if (authOverlay) authOverlay.classList.remove('hidden');
+                if (bookingCard) {
+                    const inputs = bookingCard.querySelectorAll('input, button');
+                    inputs.forEach(input => input.disabled = true);
+                }
+                [navAuthLink, mobileAuthLink].forEach(link => {
+                    if (link) {
+                        link.textContent = 'Login';
+                        link.href = '../auth/';
+                    }
+                });
+            }
+        );
 
         // Mobile Menu Toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -406,6 +421,7 @@
         };
 
         let currentStep = 0;
+        let currentBookingData = null;
 
         function updateStepUI(newStep) {
             steps.content.forEach((content, i) => {
@@ -430,7 +446,6 @@
 
         // Navigation Handlers
         document.getElementById('next-to-step-2').addEventListener('click', () => {
-            // Validate Step 1
             const pickup = document.getElementById('pickup').value;
             const dropoff = document.getElementById('dropoff').value;
             const date = document.getElementById('date').value;
@@ -445,24 +460,21 @@
         });
 
         document.getElementById('next-to-step-3').addEventListener('click', () => {
-            // Collect All Data
-            const formData = {
+            currentBookingData = {
                 pickup: document.getElementById('pickup').value,
                 dropoff: document.getElementById('dropoff').value,
                 date: document.getElementById('date').value,
                 time: document.getElementById('time').value,
-                service: document.querySelector('input[name="service"]:checked').value
+                vehicleType: document.querySelector('input[name="service"]:checked').value
             };
 
-            // Calculate price based on selection
-            const prices = { standard: 25.00, premium: 45.00, van: 35.00 };
-            const price = prices[formData.service];
+            const prices = { Economy: 25.00, Business: 45.00, Van: 35.00 };
+            const price = prices[currentBookingData.vehicleType];
 
-            // Update Summary UI
-            document.querySelectorAll('#summary-pickup').forEach(el => el.textContent = formData.pickup);
-            document.querySelectorAll('#summary-dropoff').forEach(el => el.textContent = formData.dropoff);
-            document.querySelectorAll('#summary-datetime').forEach(el => el.textContent = `${formData.date} at ${formData.time}`);
-            document.querySelectorAll('#summary-service').forEach(el => el.textContent = formData.service);
+            document.querySelectorAll('#summary-pickup').forEach(el => el.textContent = currentBookingData.pickup);
+            document.querySelectorAll('#summary-dropoff').forEach(el => el.textContent = currentBookingData.dropoff);
+            document.querySelectorAll('#summary-datetime').forEach(el => el.textContent = `${currentBookingData.date} at ${currentBookingData.time}`);
+            document.querySelectorAll('#summary-service').forEach(el => el.textContent = currentBookingData.vehicleType);
             document.querySelectorAll('#summary-price').forEach(el => el.textContent = `$${price.toFixed(2)}`);
 
             updateStepUI(2);
@@ -471,17 +483,22 @@
         document.getElementById('back-to-step-1').addEventListener('click', () => updateStepUI(0));
         document.getElementById('back-to-step-2').addEventListener('click', () => updateStepUI(1));
 
-        document.getElementById('final-confirm-button').addEventListener('click', function() {
+        document.getElementById('final-confirm-button').addEventListener('click', async function() {
             const btn = this;
             btn.disabled = true;
             btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin mr-3"></i> Booking Your Ride...';
             lucide.createIcons();
 
-            // Simulate API call and success
-            setTimeout(() => {
+            try {
+                await saveLongBooking(currentBookingData);
                 alert('Success! Your ride has been confirmed. A driver is on their way.');
                 window.location.href = '../';
-            }, 2000);
+            } catch (error) {
+                alert("Booking failed: " + error.message);
+                btn.disabled = false;
+                btn.innerHTML = 'Book Now <i data-lucide="check-circle" class="ml-3 w-5 h-5 md:w-6 md:h-6"></i>';
+                lucide.createIcons();
+            }
         });
     </script>
 </body>
