@@ -58,10 +58,10 @@
                     <a href="services/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Services</a>
                     <a href="about/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">About</a>
                     <a href="contact/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Contact</a>
-                    <a href="privacy/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Privacy</a>
+                    <a href="booking/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Booking</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="auth/" class="text-blue-600 font-bold hover:text-blue-700 transition-colors">Login</a>
+                    <a href="auth/" id="nav-auth-link" class="text-blue-600 font-bold hover:text-blue-700 transition-colors">Login</a>
                     <a href="tel:+123456789" class="bg-blue-600 text-white px-4 md:px-6 py-2 md:py-2.5 rounded-full font-bold hover:bg-blue-700 hover:scale-105 transition-all duration-300 flex items-center shadow-lg shadow-blue-200 text-sm md:text-base">
                         <i data-lucide="phone" class="w-4 h-4 mr-2"></i>
                         <span class="hidden sm:inline">Call Now</span>
@@ -80,8 +80,8 @@
                 <a href="services/" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">Services</a>
                 <a href="about/" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">About</a>
                 <a href="contact/" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">Contact</a>
-                <a href="privacy/" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">Privacy</a>
-                <a href="auth/" class="block px-4 py-3 text-blue-600 font-bold bg-blue-50 rounded-xl">Login / Sign Up</a>
+                <a href="booking/" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">Booking</a>
+                <a href="auth/" id="mobile-auth-link" class="block px-4 py-3 text-blue-600 font-bold bg-blue-50 rounded-xl">Login / Sign Up</a>
             </div>
         </div>
     </nav>
@@ -100,37 +100,110 @@
                 </div>
                 
                 <!-- Booking Card -->
-                <div id="booking" class="bg-white/95 backdrop-blur-md p-6 md:p-10 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-white/20">
-                    <h2 class="text-2xl md:text-3xl font-black mb-8 text-gray-900 tracking-tight text-center md:text-left">Ready to Ride?</h2>
-                    <form id="bookingForm" class="space-y-6">
-                        <div class="grid grid-cols-1 gap-6">
-                            <div>
-                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Pick-up Location</label>
-                                <div class="relative group">
-                                    <i data-lucide="map-pin" class="absolute left-4 top-4 w-5 h-5 text-blue-500 group-focus-within:scale-110 transition-transform"></i>
-                                    <input type="text" class="w-full pl-12 pr-4 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50" placeholder="Where should we pick you up?">
+                <div id="booking" class="bg-white/95 backdrop-blur-md p-6 md:p-10 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-white/20 min-h-[450px] flex flex-col justify-center relative overflow-hidden">
+                    
+                    <!-- Restricted Overlay (Shown when not logged in) -->
+                    <div id="auth-restriction-overlay" class="absolute inset-0 z-10 bg-white/60 backdrop-blur-sm flex flex-col items-center justify-center p-8 text-center hidden">
+                        <div class="bg-blue-50 p-4 rounded-full mb-6">
+                            <i data-lucide="lock" class="w-8 h-8 text-blue-600"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-gray-900 uppercase tracking-tight mb-3">Login Required</h2>
+                        <p class="text-gray-500 font-medium text-sm mb-8 max-w-xs">Please login to your account to book a ride and see personalized rates.</p>
+                        <a href="auth/" class="bg-blue-600 text-white px-10 py-4 rounded-2xl font-black hover:bg-blue-700 hover:scale-105 transition-all duration-300 shadow-xl shadow-blue-500/30 uppercase tracking-widest text-sm">
+                            Login to Continue
+                        </a>
+                        <p class="mt-6 text-xs text-gray-400 font-bold uppercase tracking-widest">New here? <a href="auth/" class="text-blue-600 hover:underline">Create account</a></p>
+                    </div>
+
+                    <div id="booking-form-container">
+                        <h2 class="text-2xl md:text-3xl font-black mb-8 text-gray-900 tracking-tight text-center md:text-left uppercase">Ready to Ride?</h2>
+                        <form id="bookingForm" class="space-y-6">
+                            <div class="grid grid-cols-1 gap-6">
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Pick-up Location</label>
+                                    <div class="relative group">
+                                        <i data-lucide="map-pin" class="absolute left-4 top-4 w-5 h-5 text-blue-500 group-focus-within:scale-110 transition-transform"></i>
+                                        <input type="text" id="home-pickup" name="pickup" required class="w-full pl-12 pr-4 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50" placeholder="Where should we pick you up?">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Drop-off Location</label>
+                                    <div class="relative group">
+                                        <i data-lucide="navigation" class="absolute left-4 top-4 w-5 h-5 text-blue-500 group-focus-within:scale-110 transition-transform"></i>
+                                        <input type="text" id="home-dropoff" name="dropoff" required class="w-full pl-12 pr-4 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50" placeholder="Where are you heading?">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Date</label>
+                                        <input type="date" id="home-date" name="date" required class="w-full px-4 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Time</label>
+                                        <input type="time" id="home-time" name="time" required class="w-full px-4 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50">
+                                    </div>
                                 </div>
                             </div>
-                            <div>
-                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Drop-off Location</label>
-                                <div class="relative group">
-                                    <i data-lucide="navigation" class="absolute left-4 top-4 w-5 h-5 text-blue-500 group-focus-within:scale-110 transition-transform"></i>
-                                    <input type="text" class="w-full pl-12 pr-4 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50" placeholder="Where are you heading?">
+                            <button type="submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-xl shadow-blue-500/30 uppercase tracking-widest">Book Now</button>
+                        </form>
+                    </div>
+
+                    <!-- Step 2: Review/Summary Section (Hidden by default) -->
+                    <div id="results-container" class="hidden space-y-6 animate-fade-in">
+                        <div class="text-center mb-6">
+                            <h3 class="text-xl font-black text-gray-900 uppercase tracking-tight">Review Details</h3>
+                            <p class="text-gray-500 text-[10px] font-black uppercase tracking-widest mt-1">Please confirm your booking info</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 space-y-4">
+                            <div class="flex items-start">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-blue-600 mr-3 mt-0.5"></i>
+                                <div>
+                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Pick-up</p>
+                                    <p id="home-summary-pickup" class="text-sm font-bold text-gray-900"></p>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="flex items-start border-t border-gray-200 pt-4">
+                                <i data-lucide="navigation" class="w-4 h-4 text-blue-600 mr-3 mt-0.5"></i>
                                 <div>
-                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Date</label>
-                                    <input type="date" class="w-full px-4 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50">
+                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Drop-off</p>
+                                    <p id="home-summary-dropoff" class="text-sm font-bold text-gray-900"></p>
                                 </div>
+                            </div>
+                            <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                                 <div>
-                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Time</label>
-                                    <input type="time" class="w-full px-4 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50">
+                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Date & Time</p>
+                                    <p id="home-summary-datetime" class="text-sm font-bold text-gray-900"></p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Est. Fare</p>
+                                    <p class="text-[11px] font-black text-blue-600 uppercase">Confirm with Driver</p>
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-xl shadow-blue-500/30 uppercase tracking-widest">Check Rates</button>
-                    </form>
+
+                        <div class="pt-4 space-y-3">
+                            <button id="home-book-now" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-xl shadow-blue-500/30 uppercase tracking-widest flex items-center justify-center">
+                                Confirm Booking
+                                <i data-lucide="check-circle" class="ml-2 w-5 h-5"></i>
+                            </button>
+                            <button id="edit-search" class="w-full py-2 text-gray-400 font-black uppercase tracking-widest text-[10px] hover:text-blue-600 transition-colors">
+                                Edit Details
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Success Section (Hidden by default) -->
+                    <div id="success-container" class="hidden text-center py-8 animate-fade-in">
+                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i data-lucide="check" class="w-10 h-10 text-green-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-black text-gray-900 uppercase tracking-tight">Ride Confirmed!</h3>
+                        <p class="text-gray-500 font-medium mt-3 mb-8 text-sm px-4">Your driver is already on the way! We've connected you with them, and they will provide the final fare for your ride.</p>
+                        <button onclick="location.reload()" class="bg-gray-900 text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-gray-800 transition-all">
+                            Done
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -225,7 +298,8 @@
                         <li><a href="index.html" class="hover:text-blue-500 transition-colors duration-300">Home</a></li>
                         <li><a href="services/" class="hover:text-blue-500 transition-colors duration-300">Services</a></li>
                         <li><a href="about/" class="hover:text-blue-500 transition-colors duration-300">About Us</a></li>
-                        <li><a href="booking/" class="hover:text-blue-500 transition-colors duration-300">Book Ride</a></li>
+                        <li><a href="booking/" class="hover:text-blue-500 transition-colors duration-300">Book Now</a></li>
+                        <li><a href="contact/" class="hover:text-blue-500 transition-colors duration-300">Contact</a></li>
                         <li><a href="privacy/" class="hover:text-blue-500 transition-colors duration-300">Privacy Policy</a></li>
                     </ul>
                 </div>
@@ -271,6 +345,44 @@
         // Initialize Lucide icons
         lucide.createIcons();
 
+        // Authentication Check
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const authOverlay = document.getElementById('auth-restriction-overlay');
+        const bookingFormContent = document.getElementById('booking-form-container');
+        const navAuthLink = document.getElementById('nav-auth-link');
+        const mobileAuthLink = document.getElementById('mobile-auth-link');
+
+        if (!isLoggedIn) {
+            authOverlay.classList.remove('hidden');
+            // Disable all inputs in the booking form
+            const inputs = bookingFormContent.querySelectorAll('input, button');
+            inputs.forEach(input => input.disabled = true);
+        } else {
+            navAuthLink.textContent = 'Logout';
+            navAuthLink.href = '#';
+            navAuthLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('isLoggedIn');
+                location.reload();
+            });
+
+            if (mobileAuthLink) {
+                mobileAuthLink.textContent = 'Logout';
+                mobileAuthLink.href = '#';
+                mobileAuthLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('isLoggedIn');
+                    location.reload();
+                });
+            }
+        }
+
+        // Set default date to today
+        const dateInput = document.getElementById('home-date');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+        dateInput.min = today;
+
         // Mobile Menu Toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -285,9 +397,61 @@
         });
 
         // Handle form submission
-        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        const bookingForm = document.getElementById('bookingForm');
+        const bookingFormContainer = document.getElementById('booking-form-container');
+        const resultsContainer = document.getElementById('results-container');
+        const successContainer = document.getElementById('success-container');
+
+        bookingForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('Request received! We are checking driver availability near you. You will receive a notification shortly.');
+            
+            // Capture Data for Summary
+            const pickup = document.getElementById('home-pickup').value;
+            const dropoff = document.getElementById('home-dropoff').value;
+            const date = document.getElementById('home-date').value;
+            const time = document.getElementById('home-time').value;
+
+            document.getElementById('home-summary-pickup').textContent = pickup;
+            document.getElementById('home-summary-dropoff').textContent = dropoff;
+            document.getElementById('home-summary-datetime').textContent = `${date} at ${time}`;
+
+            // Show loading state on button
+            const btn = this.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin mr-2"></i> Processing...';
+            lucide.createIcons();
+
+            // Transition to Summary
+            setTimeout(() => {
+                bookingFormContainer.classList.add('hidden');
+                resultsContainer.classList.remove('hidden');
+                lucide.createIcons();
+            }, 800);
+        });
+
+        // Edit details (go back to form)
+        document.getElementById('edit-search').addEventListener('click', () => {
+            resultsContainer.classList.add('hidden');
+            bookingFormContainer.classList.remove('hidden');
+            
+            // Reset the submit button
+            const btn = bookingForm.querySelector('button[type="submit"]');
+            btn.disabled = false;
+            btn.innerHTML = 'Book Now';
+        });
+
+        // Final Confirm (Transition to Success with Tick)
+        document.getElementById('home-book-now').addEventListener('click', function() {
+            const btn = this;
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin mr-2"></i> Confirming...';
+            lucide.createIcons();
+
+            setTimeout(() => {
+                resultsContainer.classList.add('hidden');
+                successContainer.classList.remove('hidden');
+                lucide.createIcons();
+            }, 1200);
         });
 
         // Smooth scroll
