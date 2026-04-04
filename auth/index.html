@@ -128,8 +128,9 @@
                                 <input type="email" id="signup-email" required class="w-full px-5 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium" placeholder="john@example.com">
                             </div>
                             <div>
-                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Phone Number</label>
-                                <input type="tel" id="signup-phone" required class="w-full px-5 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium" placeholder="+49123456789">
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Phone Number (Germany)</label>
+                                <input type="tel" id="signup-phone" required class="w-full px-5 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium" placeholder="+49 123 4567890">
+                                <p id="phone-validation-msg" class="text-[10px] font-bold uppercase tracking-tight mt-1 transition-colors text-gray-400">e.g. +491234567890 or 01234567890</p>
                             </div>
                             <div>
                                 <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Password</label>
@@ -195,6 +196,7 @@
             loginEmail, 
             forgotPassword, 
             validatePassword,
+            validateGermanPhone,
             handleAuthState,
             logoutUser
         } from '../firebase-logic.js';
@@ -216,9 +218,11 @@
         const signupForm = document.getElementById('signup-form');
         const forgotForm = document.getElementById('forgot-form');
         const signupPassword = document.getElementById('signup-password');
+        const signupPhone = document.getElementById('signup-phone');
         const signupSubmit = document.getElementById('signup-submit');
         const loginError = document.getElementById('login-error');
         const loginErrorText = document.getElementById('login-error-text');
+        const phoneValidationMsg = document.getElementById('phone-validation-msg');
 
         // --- STATE ---
         let authMode = 'login'; 
@@ -281,9 +285,12 @@
         };
 
         // --- SIGNUP LOGIC ---
-        signupPassword.oninput = () => {
-            const result = validatePassword(signupPassword.value);
-            for (const [key, valid] of Object.entries(result.requirements)) {
+        const validateSignup = () => {
+            const pwdResult = validatePassword(signupPassword.value);
+            const phoneResult = validateGermanPhone(signupPhone.value);
+            
+            // Update UI for password
+            for (const [key, valid] of Object.entries(pwdResult.requirements)) {
                 const el = document.querySelector(`[data-req="${key}"]`);
                 if (el) {
                     el.classList.toggle('text-green-500', valid);
@@ -292,17 +299,33 @@
                     if (icon) icon.setAttribute('data-lucide', valid ? 'check-circle' : 'circle');
                 }
             }
-            signupSubmit.disabled = !result.isValid;
+            
+            // Update UI for phone
+            if (signupPhone.value.length > 0) {
+                phoneValidationMsg.classList.toggle('text-green-500', phoneResult.isValid);
+                phoneValidationMsg.classList.toggle('text-red-500', !phoneResult.isValid);
+                phoneValidationMsg.classList.toggle('text-gray-400', false);
+                phoneValidationMsg.textContent = phoneResult.isValid ? 'Valid German format' : 'Invalid German format';
+            } else {
+                phoneValidationMsg.className = 'text-[10px] font-bold uppercase tracking-tight mt-1 transition-colors text-gray-400';
+                phoneValidationMsg.textContent = 'e.g. +491234567890 or 01234567890';
+            }
+
+            signupSubmit.disabled = !(pwdResult.isValid && phoneResult.isValid);
             lucide.createIcons();
         };
 
+        signupPassword.oninput = validateSignup;
+        signupPhone.oninput = validateSignup;
+
         signupForm.onsubmit = async (e) => {
             e.preventDefault();
+            const phoneResult = validateGermanPhone(signupPhone.value);
             const userData = {
                 firstName: document.getElementById('signup-firstname').value,
                 lastName: document.getElementById('signup-lastname').value,
                 email: document.getElementById('signup-email').value,
-                phone: document.getElementById('signup-phone').value,
+                phone: phoneResult.formatted, // Save the cleaned format
                 password: signupPassword.value
             };
 
