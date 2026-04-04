@@ -38,14 +38,12 @@
                         <i data-lucide="phone" class="w-4 h-4 mr-2"></i>
                         <span class="hidden sm:inline">Call Now</span>
                     </a>
-                    <!-- Mobile Menu Button -->
                     <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-blue-600 transition-colors">
                         <i data-lucide="menu" class="w-8 h-8"></i>
                     </button>
                 </div>
             </div>
         </div>
-        <!-- Mobile Menu Overlay -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full z-50 shadow-xl">
             <div class="px-4 pt-2 pb-6 space-y-2">
                 <a href="../" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">Home</a>
@@ -83,14 +81,11 @@
 
                         <form id="login-form" class="space-y-6">
                             <div class="space-y-4">
-                                <div id="login-input-toggle">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <label id="login-label" class="block text-xs font-black text-gray-400 uppercase tracking-widest">Email Address</label>
-                                        <button type="button" id="btn-toggle-login-type" class="text-[10px] font-black text-blue-600 uppercase hover:underline">Use Phone Instead</button>
-                                    </div>
-                                    <input type="email" id="login-identifier" required class="w-full px-5 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium" placeholder="name@example.com">
+                                <div>
+                                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Email Address</label>
+                                    <input type="email" id="login-email" required class="w-full px-5 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium" placeholder="name@example.com">
                                 </div>
-                                <div id="login-password-container">
+                                <div>
                                     <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Password</label>
                                     <div class="relative">
                                         <input type="password" id="login-password" required class="w-full px-5 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium pr-14" placeholder="••••••••">
@@ -100,7 +95,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="login-extra-options" class="flex items-center justify-between">
+                            <div class="flex items-center justify-between">
                                 <label class="flex items-center text-sm font-medium text-gray-600 cursor-pointer">
                                     <input type="checkbox" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mr-2">
                                     Remember
@@ -151,69 +146,39 @@
                                     <p class="text-[10px] font-bold uppercase tracking-tight flex items-center transition-colors text-gray-400" data-req="special"><i data-lucide="circle" class="w-3 h-3 mr-2"></i> One special character</p>
                                 </div>
                             </div>
-                            <button type="submit" id="signup-submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-xl shadow-blue-500/30 uppercase tracking-widest disabled:bg-gray-200 disabled:shadow-none" disabled>Get Verification Code</button>
+                            <button type="submit" id="signup-submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-xl shadow-blue-500/30 uppercase tracking-widest disabled:bg-gray-200 disabled:shadow-none" disabled>Create Account</button>
                         </form>
                     </div>
 
-                    <!-- 3. VERIFICATION SECTION -->
-                    <div id="verify-section" class="hidden animate-fade-in text-center">
+                    <!-- 3. VERIFICATION PENDING SECTION -->
+                    <div id="verify-pending-section" class="hidden animate-fade-in text-center">
                         <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <i data-lucide="shield-check" class="w-10 h-10 text-blue-600"></i>
+                            <i data-lucide="mail" class="w-10 h-10 text-blue-600"></i>
                         </div>
-                        <h2 class="text-2xl font-black text-gray-900 uppercase tracking-tight mb-2">Verify Account</h2>
-                        <p class="text-gray-500 text-sm font-medium mb-8">We've sent a 6-digit code to your phone. Please enter it below to activate your account.</p>
-                        
-                        <div id="verify-error" class="hidden mb-6 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center text-red-600 text-xs font-bold uppercase tracking-tight">
-                            <i data-lucide="alert-circle" class="w-4 h-4 mr-3"></i>
-                            <span id="verify-error-text">Wrong code. Please try again.</span>
-                        </div>
-
-                        <div id="otp-inputs" class="flex justify-center space-x-3 mb-8">
-                            <input type="text" maxlength="1" class="otp-field w-10 h-12 sm:w-12 sm:h-14 text-center text-xl font-bold border-2 border-gray-100 rounded-xl focus:border-blue-500 outline-none bg-gray-50">
-                            <input type="text" maxlength="1" class="otp-field w-10 h-12 sm:w-12 sm:h-14 text-center text-xl font-bold border-2 border-gray-100 rounded-xl focus:border-blue-500 outline-none bg-gray-50">
-                            <input type="text" maxlength="1" class="otp-field w-10 h-12 sm:w-12 sm:h-14 text-center text-xl font-bold border-2 border-gray-100 rounded-xl focus:border-blue-500 outline-none bg-gray-50">
-                            <input type="text" maxlength="1" class="otp-field w-10 h-12 sm:w-12 sm:h-14 text-center text-xl font-bold border-2 border-gray-100 rounded-xl focus:border-blue-500 outline-none bg-gray-50">
-                            <input type="text" maxlength="1" class="otp-field w-10 h-12 sm:w-12 sm:h-14 text-center text-xl font-bold border-2 border-gray-100 rounded-xl focus:border-blue-500 outline-none bg-gray-50">
-                            <input type="text" maxlength="1" class="otp-field w-10 h-12 sm:w-12 sm:h-14 text-center text-xl font-bold border-2 border-gray-100 rounded-xl focus:border-blue-500 outline-none bg-gray-50">
-                        </div>
-
-                        <button id="btn-verify-submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-blue-700 uppercase tracking-widest mb-4">Verify & Activate</button>
-                        <p class="text-xs text-gray-400 font-bold uppercase">Didn't get the code? <button id="btn-resend-otp" class="text-blue-600 hover:underline">Resend</button></p>
+                        <h2 class="text-2xl font-black text-gray-900 uppercase tracking-tight mb-2">Verify Email</h2>
+                        <p class="text-gray-500 text-sm font-medium mb-8">We've sent a verification link to your email. Please click it to activate your account, then return here to login.</p>
+                        <button id="btn-back-to-login-verified" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-blue-700 uppercase tracking-widest mb-4">Go to Login</button>
                     </div>
 
                     <!-- 4. FORGOT PASSWORD SECTION -->
                     <div id="forgot-section" class="hidden animate-fade-in">
                         <div class="text-center mb-8">
                             <h2 class="text-2xl font-black text-gray-900 uppercase tracking-tight uppercase">Reset Password</h2>
-                            <p class="text-gray-500 text-sm font-medium mt-2">Choose how you want to reset your password</p>
+                            <p class="text-gray-500 text-sm font-medium mt-2">Enter your email to receive a reset link</p>
                         </div>
-                        
-                        <div id="forgot-error" class="hidden mb-6 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center text-red-600 text-xs font-bold uppercase tracking-tight">
-                            <i data-lucide="alert-circle" class="w-4 h-4 mr-3"></i>
-                            <span id="forgot-error-text">User not found.</span>
-                        </div>
-
-                        <div class="mb-6 flex p-1 bg-gray-100 rounded-xl">
-                            <button id="forgot-tab-email" class="flex-1 py-2 text-[10px] font-black uppercase tracking-widest bg-white rounded-lg shadow-sm text-blue-600 transition-all">Email Link</button>
-                            <button id="forgot-tab-phone" class="flex-1 py-2 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-600 transition-all">Phone OTP</button>
-                        </div>
-
                         <form id="forgot-form" class="space-y-6">
                             <div>
-                                <label id="forgot-label" class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Email Address</label>
-                                <input type="email" id="forgot-identifier" required class="w-full px-5 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium" placeholder="john@example.com">
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Email Address</label>
+                                <input type="email" id="forgot-email" required class="w-full px-5 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium" placeholder="john@example.com">
                             </div>
-                            <button type="submit" id="forgot-submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-blue-700 uppercase tracking-widest">Send Reset Link</button>
-                            <button type="button" id="btn-back-to-login" class="w-full text-xs font-black text-gray-400 uppercase tracking-widest hover:text-blue-600 transition-colors">Back to Login</button>
+                            <button type="submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-blue-700 uppercase tracking-widest">Send Reset Link</button>
+                            <button type="button" id="btn-back-to-login-forgot" class="w-full text-xs font-black text-gray-400 uppercase tracking-widest hover:text-blue-600 transition-colors">Back to Login</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </main>
-
-    <!-- Recaptcha Container -->
-    <div id="recaptcha-container"></div>
 
     <!-- Footer -->
     <footer class="bg-gray-950 text-white py-12">
@@ -226,10 +191,7 @@
     <script src="../firebase-config.js"></script>
     <script type="module">
         import { 
-            setupRecaptcha, 
-            sendOTP, 
-            verifyOTPAndCreateUser, 
-            verifyOTPForLogin,
+            signupUser,
             loginEmail, 
             forgotPassword, 
             validatePassword,
@@ -243,7 +205,7 @@
         const sections = {
             login: document.getElementById('login-section'),
             signup: document.getElementById('signup-section'),
-            verify: document.getElementById('verify-section'),
+            verify: document.getElementById('verify-pending-section'),
             forgot: document.getElementById('forgot-section'),
             tabs: document.getElementById('auth-tabs')
         };
@@ -255,33 +217,16 @@
         const forgotForm = document.getElementById('forgot-form');
         const signupPassword = document.getElementById('signup-password');
         const signupSubmit = document.getElementById('signup-submit');
-        const otpFields = document.querySelectorAll('.otp-field');
-        const verifyError = document.getElementById('verify-error');
-        const verifyErrorText = document.getElementById('verify-error-text');
         const loginError = document.getElementById('login-error');
         const loginErrorText = document.getElementById('login-error-text');
-        const forgotError = document.getElementById('forgot-error');
-        const forgotErrorText = document.getElementById('forgot-error-text');
 
         // --- STATE ---
         let authMode = 'login'; 
-        let loginMode = 'email'; 
-        let forgotMode = 'email'; 
-        let tempUserData = null;
-        let isVerificationForLogin = false;
-
-        // --- INITIALIZATION ---
-        // Ensure recaptcha is setup when page loads
-        window.addEventListener('load', () => {
-            setupRecaptcha('recaptcha-container');
-        });
 
         handleAuthState(
             (user) => {
                 localStorage.setItem('isLoggedIn', 'true');
-                if (!tempUserData && authMode !== 'verify') {
-                    window.location.href = '../';
-                }
+                window.location.href = '../';
             },
             () => {
                 localStorage.removeItem('isLoggedIn');
@@ -310,52 +255,28 @@
         };
 
         document.getElementById('btn-forgot-password').onclick = () => switchSection('forgot');
-        document.getElementById('btn-back-to-login').onclick = () => switchSection('login');
+        document.getElementById('btn-back-to-login-verified').onclick = () => switchSection('login');
+        document.getElementById('btn-back-to-login-forgot').onclick = () => switchSection('login');
 
         // --- LOGIN LOGIC ---
-        const btnToggleLoginType = document.getElementById('btn-toggle-login-type');
-        const loginLabel = document.getElementById('login-label');
-        const loginIdentifier = document.getElementById('login-identifier');
-        const loginPasswordContainer = document.getElementById('login-password-container');
-        const loginExtraOptions = document.getElementById('login-extra-options');
-        const loginSubmit = document.getElementById('login-submit');
-
-        btnToggleLoginType.onclick = () => {
-            loginMode = loginMode === 'email' ? 'phone' : 'email';
-            loginLabel.textContent = loginMode === 'email' ? 'Email Address' : 'Phone Number';
-            loginIdentifier.type = loginMode === 'email' ? 'email' : 'tel';
-            loginIdentifier.placeholder = loginMode === 'email' ? 'name@example.com' : '+491234567890';
-            btnToggleLoginType.textContent = loginMode === 'email' ? 'Use Phone Instead' : 'Use Email Instead';
-            
-            loginPasswordContainer.classList.toggle('hidden', loginMode === 'phone');
-            loginExtraOptions.classList.toggle('hidden', loginMode === 'phone');
-            loginSubmit.textContent = loginMode === 'email' ? 'Sign In' : 'Get OTP';
-        };
-
         loginForm.onsubmit = async (e) => {
             e.preventDefault();
             loginError.classList.add('hidden');
-            const identifier = loginIdentifier.value;
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
             
             try {
-                loginSubmit.disabled = true;
-                const originalText = loginSubmit.textContent;
-                loginSubmit.textContent = 'Processing...';
-
-                if (loginMode === 'email') {
-                    const password = document.getElementById('login-password').value;
-                    await loginEmail(identifier, password);
-                    window.location.href = '../';
-                } else {
-                    isVerificationForLogin = true;
-                    await sendOTP(identifier);
-                    switchSection('verify');
-                }
+                const btn = document.getElementById('login-submit');
+                btn.disabled = true;
+                btn.textContent = 'Verifying...';
+                await loginEmail(email, password);
+                window.location.href = '../';
             } catch (error) {
                 loginErrorText.textContent = error.message;
                 loginError.classList.remove('hidden');
-                loginSubmit.disabled = false;
-                loginSubmit.textContent = loginMode === 'email' ? 'Sign In' : 'Get OTP';
+                const btn = document.getElementById('login-submit');
+                btn.disabled = false;
+                btn.textContent = 'Sign In';
             }
         };
 
@@ -387,126 +308,26 @@
 
             try {
                 signupSubmit.disabled = true;
-                signupSubmit.textContent = 'Sending OTP...';
-                await sendOTP(userData.phone);
-                tempUserData = userData;
-                isVerificationForLogin = false;
+                signupSubmit.textContent = 'Creating account...';
+                await signupUser(userData);
                 switchSection('verify');
             } catch (error) {
                 alert("Signup Error: " + error.message);
                 signupSubmit.disabled = false;
-                signupSubmit.textContent = 'Get Verification Code';
-            }
-        };
-
-        // --- VERIFICATION LOGIC ---
-        otpFields.forEach((field, index) => {
-            field.oninput = (e) => {
-                if (e.target.value && index < otpFields.length - 1) {
-                    otpFields[index + 1].focus();
-                }
-            };
-            field.onkeydown = (e) => {
-                if (e.key === 'Backspace' && !field.value && index > 0) {
-                    otpFields[index - 1].focus();
-                }
-            };
-        });
-
-        document.getElementById('btn-verify-submit').onclick = async () => {
-            const code = Array.from(otpFields).map(f => f.value).join('');
-            if (code.length < 6) {
-                verifyErrorText.textContent = 'Please enter 6-digit code.';
-                verifyError.classList.remove('hidden');
-                return;
-            }
-
-            try {
-                const btn = document.getElementById('btn-verify-submit');
-                btn.disabled = true;
-                btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin mr-2"></i> Verifying...';
-                lucide.createIcons();
-
-                if (isVerificationForLogin) {
-                    await verifyOTPForLogin(code);
-                } else {
-                    await verifyOTPAndCreateUser(code, tempUserData);
-                }
-                
-                window.location.href = '../';
-            } catch (error) {
-                verifyErrorText.textContent = error.message;
-                verifyError.classList.remove('hidden');
-                const btn = document.getElementById('btn-verify-submit');
-                btn.disabled = false;
-                btn.textContent = 'Verify & Activate';
-                lucide.createIcons();
+                signupSubmit.textContent = 'Create Account';
             }
         };
 
         // --- FORGOT PASSWORD ---
-        const forgotTabEmail = document.getElementById('forgot-tab-email');
-        const forgotTabPhone = document.getElementById('forgot-tab-phone');
-        const forgotLabel = document.getElementById('forgot-label');
-        const forgotIdentifier = document.getElementById('forgot-identifier');
-        const forgotSubmit = document.getElementById('forgot-submit');
-
-        forgotTabEmail.onclick = () => {
-            forgotMode = 'email';
-            forgotTabEmail.className = 'flex-1 py-2 text-[10px] font-black uppercase tracking-widest bg-white rounded-lg shadow-sm text-blue-600 transition-all';
-            forgotTabPhone.className = 'flex-1 py-2 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-600 transition-all';
-            forgotLabel.textContent = 'Email Address';
-            forgotIdentifier.type = 'email';
-            forgotIdentifier.placeholder = 'john@example.com';
-            forgotSubmit.textContent = 'Send Reset Link';
-        };
-
-        forgotTabPhone.onclick = () => {
-            forgotMode = 'phone';
-            forgotTabPhone.className = 'flex-1 py-2 text-[10px] font-black uppercase tracking-widest bg-white rounded-lg shadow-sm text-blue-600 transition-all';
-            forgotTabEmail.className = 'flex-1 py-2 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-gray-600 transition-all';
-            forgotLabel.textContent = 'Phone Number';
-            forgotIdentifier.type = 'tel';
-            forgotIdentifier.placeholder = '+491234567890';
-            forgotSubmit.textContent = 'Get OTP';
-        };
-
         forgotForm.onsubmit = async (e) => {
             e.preventDefault();
-            forgotError.classList.add('hidden');
-            const identifier = forgotIdentifier.value;
-            
+            const email = document.getElementById('forgot-email').value;
             try {
-                forgotSubmit.disabled = true;
-                forgotSubmit.textContent = 'Processing...';
-
-                if (forgotMode === 'email') {
-                    await forgotPassword(identifier);
-                    alert("Reset link sent to your email!");
-                    switchSection('login');
-                } else {
-                    isVerificationForLogin = true; // Use phone sign-in as verification
-                    await sendOTP(identifier);
-                    switchSection('verify');
-                }
+                await forgotPassword(email);
+                alert("Reset link sent to your email!");
+                switchSection('login');
             } catch (error) {
-                forgotErrorText.textContent = error.message;
-                forgotError.classList.remove('hidden');
-                forgotSubmit.disabled = false;
-                forgotSubmit.textContent = forgotMode === 'email' ? 'Send Reset Link' : 'Get OTP';
-            }
-        };
-
-        // Resend OTP
-        document.getElementById('btn-resend-otp').onclick = async () => {
-            const phone = tempUserData ? tempUserData.phone : loginIdentifier.value;
-            if (phone) {
-                try {
-                    await sendOTP(phone);
-                    alert("OTP Resent!");
-                } catch (error) {
-                    alert("Error resending OTP: " + error.message);
-                }
+                alert("Error: " + error.message);
             }
         };
 
