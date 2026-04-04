@@ -212,27 +212,39 @@
         </div>
     </footer>
 
-    <script>
+    <!-- Firebase Scripts -->
+    <script src="../firebase-config.js"></script>
+    <script type="module">
+        import { handleAuthState, logoutUser, saveContactRequest } from '../firebase-logic.js';
+
         lucide.createIcons();
 
         // Authentication Logic for Navbar
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
         const navAuthLink = document.getElementById('nav-auth-link');
         const mobileAuthLink = document.getElementById('mobile-auth-link');
 
-        if (isLoggedIn) {
-            [navAuthLink, mobileAuthLink].forEach(link => {
-                if (link) {
-                    link.textContent = 'Logout';
-                    link.href = '#';
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        localStorage.removeItem('isLoggedIn');
-                        location.reload();
-                    });
-                }
-            });
-        }
+        handleAuthState(
+            (user) => {
+                [navAuthLink, mobileAuthLink].forEach(link => {
+                    if (link) {
+                        link.textContent = 'Logout';
+                        link.href = '#';
+                        link.addEventListener('click', async (e) => {
+                            e.preventDefault();
+                            await logoutUser();
+                        });
+                    }
+                });
+            },
+            () => {
+                [navAuthLink, mobileAuthLink].forEach(link => {
+                    if (link) {
+                        link.textContent = 'Login';
+                        link.href = '../auth/';
+                    }
+                });
+            }
+        );
 
         // Mobile Menu Toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -246,7 +258,7 @@
             lucide.createIcons();
         });
 
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const btn = this.querySelector('button[type="submit"]');
@@ -254,12 +266,25 @@
             btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin mr-2"></i> Sending...';
             lucide.createIcons();
 
-            // Simulate sending process
-            setTimeout(() => {
+            const contactData = {
+                firstName: document.getElementById('contact-fname').value,
+                lastName: document.getElementById('contact-lname').value,
+                email: document.getElementById('contact-email').value,
+                phone: document.getElementById('contact-phone').value,
+                message: document.getElementById('contact-message').value
+            };
+
+            try {
+                await saveContactRequest(contactData);
                 document.getElementById('contact-form-container').classList.add('hidden');
                 document.getElementById('contact-success-container').classList.remove('hidden');
                 lucide.createIcons();
-            }, 1500);
+            } catch (error) {
+                alert("Error sending request: " + error.message);
+                btn.disabled = false;
+                btn.innerHTML = 'Send Request';
+                lucide.createIcons();
+            }
         });
     </script>
 </body>
