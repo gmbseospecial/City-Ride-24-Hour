@@ -165,7 +165,8 @@ export const saveContactRequest = async (contactData) => {
     }
 };
 
-// --- VALIDATION HELPER ---
+// --- VALIDATION HELPERS ---
+
 export const validatePassword = (password) => {
     const hasMinLength = password.length >= 8;
     const hasUppercase = /[A-Z]/.test(password);
@@ -183,6 +184,18 @@ export const validatePassword = (password) => {
     };
 };
 
+export const validateGermanPhone = (phone) => {
+    // Regex for German phone numbers:
+    // Supports: +49..., 0049..., 01..., 02..., etc.
+    // Length: 10 to 15 digits
+    const regex = /^(\+49|0049|0)[1-9][0-9]{8,13}$/;
+    const cleanPhone = phone.replace(/[\s\-\(\)]/g, ''); // Remove spaces, dashes, brackets
+    return {
+        isValid: regex.test(cleanPhone),
+        formatted: cleanPhone
+    };
+};
+
 // Global Exposure
 window.firebaseLogic = {
     handleAuthState,
@@ -193,5 +206,6 @@ window.firebaseLogic = {
     saveHomeBooking,
     saveLongBooking,
     saveContactRequest,
-    validatePassword
+    validatePassword,
+    validateGermanPhone
 };
