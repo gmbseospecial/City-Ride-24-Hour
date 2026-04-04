@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, RecaptchaVerifier, signInWithPhoneNumber, EmailAuthProvider, linkWithCredential } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, setDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, setDoc, getDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // Initialize Firebase
 const app = initializeApp(window.firebaseConfig);
@@ -10,7 +10,7 @@ const db = getFirestore(app);
 // Auth State Synchronizer
 export const handleAuthState = (onUserIn, onUserOut) => {
     onAuthStateChanged(auth, (user) => {
-        if (user) {
+        if (user && user.emailVerified) {
             onUserIn(user);
         } else {
             onUserOut();
@@ -30,104 +30,74 @@ export const logoutUser = async () => {
 
 // --- AUTH FUNCTIONS ---
 
-// Recaptcha Verifier
-export const setupRecaptcha = (containerId) => {
+// Signup with Email/Password and send verification
+export const signupUser = async (userData) => {
     try {
-        // If it already exists, clear it first to avoid multiple instances
-        if (window.recaptchaVerifier) {
-            window.recaptchaVerifier.clear();
-            window.recaptchaVerifier = null;
-        }
-        
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, containerId, {
-            'size': 'invisible',
-            'callback': (response) => {
-                console.log("Recaptcha verified");
-            },
-            'expired-callback': () => {
-                console.log("Recaptcha expired, resetting...");
-                setupRecaptcha(containerId);
-            }
-        });
-        
-        // Explicitly render to ensure it's ready
-        return window.recaptchaVerifier.render();
-    } catch (error) {
-        console.error("Recaptcha Setup Error:", error);
-        throw error;
-    }
-};
+        // 1. Create User
+        const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
+        const user = userCredential.user;
 
-// Send OTP for Signup or Login
-export const sendOTP = async (phoneNumber) => {
-    try {
-        if (!window.recaptchaVerifier) {
-            throw new Error("Recaptcha not initialized. Please refresh.");
-        }
-        
-        // Ensure phone number starts with + (E.164)
-        const formattedPhone = phoneNumber.startsWith('+') ? phoneNumber : '+' + phoneNumber.replace(/\D/g, '');
-        
-        const appVerifier = window.recaptchaVerifier;
-        window.confirmationResult = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
-        return true;
-    } catch (error) {
-        console.error("OTP Error Details:", error.code, error.message);
-        // If captcha failed, reset it
-        if (error.code === 'auth/captcha-check-failed' || error.code === 'auth/invalid-app-credential') {
-            if (window.recaptchaVerifier) {
-                window.recaptchaVerifier.clear();
-                window.recaptchaVerifier = null;
-            }
-        }
-        throw error;
-    }
-};
+        // 2. Send Email Verification
+        await sendEmailVerification(user);
 
-// Verify OTP & Complete Signup (Link Email/Pwd)
-export const verifyOTPAndCreateUser = async (otpCode, userData) => {
-    try {
-        // 1. Confirm Phone
-        const result = await window.confirmationResult.confirm(otpCode);
-        const user = result.user;
-        
-        // 2. Link with Email/Password
-        const credential = EmailAuthProvider.credential(userData.email, userData.password);
-        await linkWithCredential(user, credential);
-
-        // 3. Save details to Firestore using UID as Document ID
-        await setDoc(doc(db, "users", user.uid), {
+        // 3. Store temp profile in localStorage (to be saved to Firestore after verification)
+        const profileData = {
             firstName: userData.firstName,
             lastName: userData.lastName,
             email: userData.email,
             phone: userData.phone,
-            createdAt: serverTimestamp()
-        });
+            uid: user.uid
+        };
+        localStorage.setItem('pending_profile_' + user.uid, JSON.stringify(profileData));
 
         return user;
     } catch (error) {
-        console.error("Verification/Signup Error:", error);
+        console.error("Signup Error:", error);
         throw error;
     }
 };
 
-// Verify OTP for Login
-export const verifyOTPForLogin = async (otpCode) => {
-    try {
-        const result = await window.confirmationResult.confirm(otpCode);
-        return result.user;
-    } catch (error) {
-        console.error("OTP Login Error:", error);
-        throw error;
-    }
-};
-
-// Login with Email
+// Login with Email - Checks verification and saves to Firestore if first time
 export const loginEmail = async (email, password) => {
     try {
-        return await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // 1. Check if email is verified
+        if (!user.emailVerified) {
+            await signOut(auth);
+            throw new Error("Please verify your email address before logging in. Check your inbox.");
+        }
+
+        // 2. Check if user document exists in Firestore
+        const userDocRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (!userDoc.exists()) {
+            // Check if we have pending profile data in localStorage
+            const pendingDataStr = localStorage.getItem('pending_profile_' + user.uid);
+            if (pendingDataStr) {
+                const pendingData = JSON.parse(pendingDataStr);
+                await setDoc(userDocRef, {
+                    firstName: pendingData.firstName,
+                    lastName: pendingData.lastName,
+                    email: pendingData.email,
+                    phone: pendingData.phone,
+                    createdAt: serverTimestamp()
+                });
+                localStorage.removeItem('pending_profile_' + user.uid);
+            } else {
+                // Fallback: If no localStorage data, create minimal profile
+                await setDoc(userDocRef, {
+                    email: user.email,
+                    createdAt: serverTimestamp()
+                });
+            }
+        }
+
+        return user;
     } catch (error) {
-        console.error("Login Email Error:", error);
+        console.error("Login Error:", error);
         throw error;
     }
 };
@@ -149,9 +119,11 @@ export const forgotPassword = async (email) => {
 export const saveHomeBooking = async (bookingData) => {
     try {
         const user = auth.currentUser;
+        if (!user || !user.emailVerified) throw new Error("Auth required");
+        
         await addDoc(collection(db, "bookings"), {
             ...bookingData,
-            userId: user ? user.uid : "anonymous",
+            userId: user.uid,
             createdAt: serverTimestamp()
         });
         return true;
@@ -165,9 +137,11 @@ export const saveHomeBooking = async (bookingData) => {
 export const saveLongBooking = async (bookingData) => {
     try {
         const user = auth.currentUser;
+        if (!user || !user.emailVerified) throw new Error("Auth required");
+
         await addDoc(collection(db, "long_bookings"), {
             ...bookingData,
-            userId: user ? user.uid : "anonymous",
+            userId: user.uid,
             createdAt: serverTimestamp()
         });
         return true;
@@ -213,10 +187,7 @@ export const validatePassword = (password) => {
 window.firebaseLogic = {
     handleAuthState,
     logoutUser,
-    setupRecaptcha,
-    sendOTP,
-    verifyOTPAndCreateUser,
-    verifyOTPForLogin,
+    signupUser,
     loginEmail,
     forgotPassword,
     saveHomeBooking,
