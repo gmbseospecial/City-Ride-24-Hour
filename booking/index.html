@@ -9,6 +9,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .step-active { @apply bg-blue-600 text-white shadow-lg shadow-blue-200; }
+        .step-completed { @apply bg-green-500 text-white; }
+        .step-pending { @apply bg-gray-50 text-gray-400; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -27,30 +37,28 @@
                     <a href="../services/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Services</a>
                     <a href="../about/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">About</a>
                     <a href="../contact/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Contact</a>
-                    <a href="../privacy/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Privacy</a>
+                    <a href="./" class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1">Booking</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="../auth/" class="text-blue-600 font-bold hover:text-blue-700 transition-colors">Login</a>
+                    <a href="../auth/" id="nav-auth-link" class="text-blue-600 font-bold hover:text-blue-700 transition-colors">Login</a>
                     <a href="tel:+123456789" class="bg-blue-600 text-white px-4 md:px-6 py-2 md:py-2.5 rounded-full font-bold hover:bg-blue-700 hover:scale-105 transition-all duration-300 flex items-center shadow-lg shadow-blue-200 text-sm md:text-base">
                         <i data-lucide="phone" class="w-4 h-4 mr-2"></i>
                         <span class="hidden sm:inline">Call Now</span>
                     </a>
-                    <!-- Mobile Menu Button -->
                     <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-blue-600 transition-colors">
                         <i data-lucide="menu" class="w-8 h-8"></i>
                     </button>
                 </div>
             </div>
         </div>
-        <!-- Mobile Menu Overlay -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full z-50 shadow-xl">
             <div class="px-4 pt-2 pb-6 space-y-2">
                 <a href="../" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">Home</a>
                 <a href="../services/" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">Services</a>
                 <a href="../about/" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">About</a>
                 <a href="../contact/" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">Contact</a>
-                <a href="../privacy/" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">Privacy</a>
-                <a href="../auth/" class="block px-4 py-3 text-blue-600 font-bold bg-blue-50 rounded-xl">Login / Sign Up</a>
+                <a href="./" class="block px-4 py-3 text-blue-600 font-bold bg-blue-50 rounded-xl">Booking</a>
+                <a href="../auth/" id="mobile-auth-link" class="block px-4 py-3 text-blue-600 font-bold bg-blue-50 rounded-xl">Login / Sign Up</a>
             </div>
         </div>
     </nav>
@@ -66,98 +74,213 @@
     <!-- Booking Interface -->
     <section class="py-12 md:py-24">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white rounded-[2rem] md:rounded-[3rem] shadow-[0_40px_100px_rgba(0,0,0,0.1)] border border-gray-50 overflow-hidden">
+            <div id="booking-card" class="bg-white rounded-[2rem] md:rounded-[3rem] shadow-[0_40px_100px_rgba(0,0,0,0.1)] border border-gray-50 overflow-hidden relative">
+                
+                <!-- Restricted Overlay (Shown when not logged in) -->
+                <div id="auth-restriction-overlay" class="absolute inset-0 z-50 bg-white/60 backdrop-blur-sm flex flex-col items-center justify-center p-8 text-center hidden">
+                    <div class="bg-blue-50 p-4 rounded-full mb-6">
+                        <i data-lucide="lock" class="w-8 h-8 text-blue-600"></i>
+                    </div>
+                    <h2 class="text-2xl font-black text-gray-900 uppercase tracking-tight mb-3">Login Required</h2>
+                    <p class="text-gray-500 font-medium text-sm mb-8 max-w-xs">Please login to your account to access the full booking system and secure your ride.</p>
+                    <a href="../auth/" class="bg-blue-600 text-white px-10 py-4 rounded-2xl font-black hover:bg-blue-700 hover:scale-105 transition-all duration-300 shadow-xl shadow-blue-500/30 uppercase tracking-widest text-sm">
+                        Login to Continue
+                    </a>
+                </div>
+
+                <!-- Stepper Indicators -->
                 <div class="flex border-b border-gray-100 text-[10px] md:text-sm">
-                    <div class="flex-1 py-4 md:py-6 text-center bg-blue-600 text-white font-black uppercase tracking-widest">1. Trip</div>
-                    <div class="flex-1 py-4 md:py-6 text-center bg-gray-50 text-gray-400 font-black uppercase tracking-widest">2. Vehicle</div>
-                    <div class="flex-1 py-4 md:py-6 text-center bg-gray-50 text-gray-400 font-black uppercase tracking-widest">3. Confirm</div>
+                    <div id="step-indicator-1" class="flex-1 py-4 md:py-6 text-center bg-blue-600 text-white font-black uppercase tracking-widest transition-all duration-500">1. Trip</div>
+                    <div id="step-indicator-2" class="flex-1 py-4 md:py-6 text-center bg-gray-50 text-gray-400 font-black uppercase tracking-widest transition-all duration-500">2. Vehicle</div>
+                    <div id="step-indicator-3" class="flex-1 py-4 md:py-6 text-center bg-gray-50 text-gray-400 font-black uppercase tracking-widest transition-all duration-500">3. Confirm</div>
                 </div>
 
                 <div class="p-6 md:p-16">
-                    <form id="bookingPageForm" class="space-y-8 md:space-y-10">
+                    <!-- STEP 1: TRIP DETAILS -->
+                    <div id="step-content-1" class="space-y-8 md:space-y-10 animate-fade-in">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
-                            <!-- Pick-up -->
                             <div>
                                 <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Pick-up Location</label>
                                 <div class="relative group">
                                     <i data-lucide="map-pin" class="absolute left-5 top-5 w-6 h-6 text-blue-500 group-focus-within:scale-110 transition-transform"></i>
-                                    <input type="text" required class="w-full pl-14 pr-6 py-4 md:py-5 border-2 border-gray-100 rounded-[1.2rem] md:rounded-[1.5rem] focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium text-sm md:text-base" placeholder="Enter pick-up address">
+                                    <input type="text" id="pickup" required class="w-full pl-14 pr-6 py-4 md:py-5 border-2 border-gray-100 rounded-[1.2rem] md:rounded-[1.5rem] focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium text-sm md:text-base" placeholder="Enter pick-up address">
                                 </div>
                             </div>
-
-                            <!-- Drop-off -->
                             <div>
                                 <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Drop-off Location</label>
                                 <div class="relative group">
                                     <i data-lucide="navigation" class="absolute left-5 top-5 w-6 h-6 text-blue-500 group-focus-within:scale-110 transition-transform"></i>
-                                    <input type="text" required class="w-full pl-14 pr-6 py-4 md:py-5 border-2 border-gray-100 rounded-[1.2rem] md:rounded-[1.5rem] focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium text-sm md:text-base" placeholder="Enter destination address">
+                                    <input type="text" id="dropoff" required class="w-full pl-14 pr-6 py-4 md:py-5 border-2 border-gray-100 rounded-[1.2rem] md:rounded-[1.5rem] focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium text-sm md:text-base" placeholder="Enter destination address">
                                 </div>
                             </div>
-
-                            <!-- Date -->
                             <div>
                                 <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Pick-up Date</label>
                                 <div class="relative group">
                                     <i data-lucide="calendar" class="absolute left-5 top-5 w-6 h-6 text-blue-500 group-focus-within:scale-110 transition-transform"></i>
-                                    <input type="date" required class="w-full pl-14 pr-6 py-4 md:py-5 border-2 border-gray-100 rounded-[1.2rem] md:rounded-[1.5rem] focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium text-sm md:text-base">
+                                    <input type="date" id="date" required class="w-full pl-14 pr-6 py-4 md:py-5 border-2 border-gray-100 rounded-[1.2rem] md:rounded-[1.5rem] focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium text-sm md:text-base">
                                 </div>
                             </div>
-
-                            <!-- Time -->
                             <div>
                                 <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Pick-up Time</label>
                                 <div class="relative group">
                                     <i data-lucide="clock" class="absolute left-5 top-5 w-6 h-6 text-blue-500 group-focus-within:scale-110 transition-transform"></i>
-                                    <input type="time" required class="w-full pl-14 pr-6 py-4 md:py-5 border-2 border-gray-100 rounded-[1.2rem] md:rounded-[1.5rem] focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium text-sm md:text-base">
+                                    <input type="time" id="time" required class="w-full pl-14 pr-6 py-4 md:py-5 border-2 border-gray-100 rounded-[1.2rem] md:rounded-[1.5rem] focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium text-sm md:text-base">
+                                </div>
+                            </div>
+                        </div>
+                        <button id="next-to-step-2" class="w-full bg-blue-600 text-white py-5 md:py-6 rounded-[1.2rem] md:rounded-[1.5rem] font-black text-lg md:text-xl hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-blue-500/30 uppercase tracking-widest flex items-center justify-center">
+                            Select Vehicle
+                            <i data-lucide="arrow-right" class="ml-3 w-5 h-5 md:w-6 md:h-6"></i>
+                        </button>
+                    </div>
+
+                    <!-- STEP 2: VEHICLE SELECTION -->
+                    <div id="step-content-2" class="hidden space-y-8 md:space-y-10 animate-fade-in">
+                        <div class="text-center md:text-left mb-8">
+                            <h2 class="text-xl md:text-2xl font-black text-gray-900 uppercase tracking-tight">Available Fleets</h2>
+                            <p class="text-gray-500 text-sm font-medium">Choose a ride that fits your comfort level</p>
+                        </div>
+                        <div class="grid grid-cols-1 gap-4 md:gap-6">
+                            <!-- Standard -->
+                            <label class="relative cursor-pointer group">
+                                <input type="radio" name="service" value="standard" class="peer sr-only" checked>
+                                <div class="p-6 border-2 border-gray-100 rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50 flex items-center justify-between">
+                                    <div class="flex items-center space-x-6">
+                                        <div class="bg-gray-100 p-4 rounded-2xl group-hover:bg-white transition-colors">
+                                            <i data-lucide="car" class="w-10 h-10 text-gray-400 group-hover:text-blue-500"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-black text-gray-900 uppercase tracking-tight text-lg">Standard</h4>
+                                            <div class="flex items-center space-x-4 text-xs text-gray-500 mt-1 font-bold uppercase tracking-widest">
+                                                <span class="flex items-center"><i data-lucide="users" class="w-3 h-3 mr-1"></i> 4 Seats</span>
+                                                <span class="flex items-center"><i data-lucide="briefcase" class="w-3 h-3 mr-1"></i> 2 Bags</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-2xl font-black text-blue-600">$25.00</p>
+                                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Est. Total</p>
+                                    </div>
+                                </div>
+                            </label>
+                            <!-- Premium -->
+                            <label class="relative cursor-pointer group">
+                                <input type="radio" name="service" value="premium" class="peer sr-only">
+                                <div class="p-6 border-2 border-gray-100 rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50 flex items-center justify-between">
+                                    <div class="flex items-center space-x-6">
+                                        <div class="bg-gray-100 p-4 rounded-2xl group-hover:bg-white transition-colors">
+                                            <i data-lucide="gem" class="w-10 h-10 text-gray-400 group-hover:text-blue-500"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-black text-gray-900 uppercase tracking-tight text-lg">Premium</h4>
+                                            <div class="flex items-center space-x-4 text-xs text-gray-500 mt-1 font-bold uppercase tracking-widest">
+                                                <span class="flex items-center"><i data-lucide="users" class="w-3 h-3 mr-1"></i> 4 Seats</span>
+                                                <span class="flex items-center"><i data-lucide="briefcase" class="w-3 h-3 mr-1"></i> 3 Bags</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-2xl font-black text-blue-600">$45.00</p>
+                                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Est. Total</p>
+                                    </div>
+                                </div>
+                            </label>
+                            <!-- Van -->
+                            <label class="relative cursor-pointer group">
+                                <input type="radio" name="service" value="van" class="peer sr-only">
+                                <div class="p-6 border-2 border-gray-100 rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50 flex items-center justify-between">
+                                    <div class="flex items-center space-x-6">
+                                        <div class="bg-gray-100 p-4 rounded-2xl group-hover:bg-white transition-colors">
+                                            <i data-lucide="users" class="w-10 h-10 text-gray-400 group-hover:text-blue-500"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-black text-gray-900 uppercase tracking-tight text-lg">Van</h4>
+                                            <div class="flex items-center space-x-4 text-xs text-gray-500 mt-1 font-bold uppercase tracking-widest">
+                                                <span class="flex items-center"><i data-lucide="users" class="w-3 h-3 mr-1"></i> 7 Seats</span>
+                                                <span class="flex items-center"><i data-lucide="briefcase" class="w-3 h-3 mr-1"></i> 5 Bags</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-2xl font-black text-blue-600">$35.00</p>
+                                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Est. Total</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="flex space-x-4">
+                            <button id="back-to-step-1" class="flex-1 bg-white text-gray-500 py-5 rounded-[1.2rem] md:rounded-[1.5rem] font-black text-lg hover:text-blue-600 transition-all uppercase tracking-widest border-2 border-gray-100">
+                                Back
+                            </button>
+                            <button id="next-to-step-3" class="flex-[2] bg-blue-600 text-white py-5 rounded-[1.2rem] md:rounded-[1.5rem] font-black text-lg hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-blue-500/30 uppercase tracking-widest">
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: CONFIRM & PAY -->
+                    <div id="step-content-3" class="hidden space-y-8 md:space-y-10 animate-fade-in">
+                        <div class="text-center mb-10">
+                            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i data-lucide="check" class="w-10 h-10 text-green-600"></i>
+                            </div>
+                            <h2 class="text-2xl md:text-3xl font-black text-gray-900 uppercase tracking-tight">Review Booking</h2>
+                            <p class="text-gray-500 font-medium mt-2 text-sm">Please verify your details before final confirmation</p>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-3xl p-6 md:p-10 space-y-6 border border-gray-100">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="space-y-6">
+                                    <div class="flex items-start">
+                                        <div class="bg-blue-100 p-2 rounded-lg mr-4"><i data-lucide="map-pin" class="w-5 h-5 text-blue-600"></i></div>
+                                        <div>
+                                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Pick-up Location</p>
+                                            <p id="summary-pickup" class="font-bold text-gray-900 text-sm"></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <div class="bg-blue-100 p-2 rounded-lg mr-4"><i data-lucide="navigation" class="w-5 h-5 text-blue-600"></i></div>
+                                        <div>
+                                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Drop-off Location</p>
+                                            <p id="summary-dropoff" class="font-bold text-gray-900 text-sm"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-y-6">
+                                    <div class="flex items-start">
+                                        <div class="bg-blue-100 p-2 rounded-lg mr-4"><i data-lucide="calendar" class="w-5 h-5 text-blue-600"></i></div>
+                                        <div>
+                                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Scheduled Time</p>
+                                            <p id="summary-datetime" class="font-bold text-gray-900 text-sm"></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <div class="bg-blue-100 p-2 rounded-lg mr-4"><i data-lucide="car" class="w-5 h-5 text-blue-600"></i></div>
+                                        <div>
+                                            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Service Level</p>
+                                            <p id="summary-service" class="font-bold text-blue-600 uppercase text-sm"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pt-6 border-t border-gray-200">
+                                <div class="flex justify-between items-center">
+                                    <p class="text-sm font-black text-gray-900 uppercase tracking-tight">Estimated Total Cost</p>
+                                    <p id="summary-price" class="text-3xl font-black text-blue-600"></p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Service Type Selection -->
-                        <div>
-                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-6 text-center md:text-left">Select Service Type</label>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                                <label class="relative cursor-pointer group">
-                                    <input type="radio" name="service" value="standard" class="peer sr-only" checked>
-                                    <div class="p-5 md:p-6 border-2 border-gray-100 rounded-2xl md:rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50">
-                                        <div class="flex items-center justify-between mb-4">
-                                            <i data-lucide="car" class="w-8 h-8 md:w-10 md:h-10 text-gray-300 group-hover:text-blue-500 transition-colors"></i>
-                                            <span class="text-[10px] md:text-xs font-black text-blue-600 bg-blue-100 px-3 py-1 rounded-full">$1.50/mi</span>
-                                        </div>
-                                        <h4 class="font-black text-gray-900 uppercase tracking-tight text-sm md:text-base">Standard</h4>
-                                        <p class="text-[10px] md:text-xs text-gray-500 mt-2 font-medium">Daily sedan, seats 4</p>
-                                    </div>
-                                </label>
-                                <label class="relative cursor-pointer group">
-                                    <input type="radio" name="service" value="premium" class="peer sr-only">
-                                    <div class="p-5 md:p-6 border-2 border-gray-100 rounded-2xl md:rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50">
-                                        <div class="flex items-center justify-between mb-4">
-                                            <i data-lucide="gem" class="w-8 h-8 md:w-10 md:h-10 text-gray-300 group-hover:text-blue-500 transition-colors"></i>
-                                            <span class="text-[10px] md:text-xs font-black text-blue-600 bg-blue-100 px-3 py-1 rounded-full">$2.50/mi</span>
-                                        </div>
-                                        <h4 class="font-black text-gray-900 uppercase tracking-tight text-sm md:text-base">Premium</h4>
-                                        <p class="text-[10px] md:text-xs text-gray-500 mt-2 font-medium">Luxury fleet experience</p>
-                                    </div>
-                                </label>
-                                <label class="relative cursor-pointer group">
-                                    <input type="radio" name="service" value="van" class="peer sr-only">
-                                    <div class="p-5 md:p-6 border-2 border-gray-100 rounded-2xl md:rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50">
-                                        <div class="flex items-center justify-between mb-4">
-                                            <i data-lucide="users" class="w-8 h-8 md:w-10 md:h-10 text-gray-300 group-hover:text-blue-500 transition-colors"></i>
-                                            <span class="text-[10px] md:text-xs font-black text-blue-600 bg-blue-100 px-3 py-1 rounded-full">$2.00/mi</span>
-                                        </div>
-                                        <h4 class="font-black text-gray-900 uppercase tracking-tight text-sm md:text-base">Van</h4>
-                                        <p class="text-[10px] md:text-xs text-gray-500 mt-2 font-medium">Group travel, up to 7</p>
-                                    </div>
-                                </label>
-                            </div>
+                        <div class="space-y-4">
+                            <button id="final-confirm-button" class="w-full bg-blue-600 text-white py-5 md:py-6 rounded-[1.2rem] md:rounded-[1.5rem] font-black text-lg md:text-xl hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-blue-500/30 uppercase tracking-widest flex items-center justify-center">
+                                Book Now
+                                <i data-lucide="check-circle" class="ml-3 w-5 h-5 md:w-6 md:h-6"></i>
+                            </button>
+                            <button id="back-to-step-2" class="w-full bg-white text-gray-500 py-4 rounded-[1.2rem] font-bold text-sm hover:text-blue-600 transition-all uppercase tracking-widest">
+                                Change Vehicle
+                            </button>
                         </div>
-
-                        <button type="submit" class="w-full bg-blue-600 text-white py-5 md:py-6 rounded-[1.2rem] md:rounded-[1.5rem] font-black text-lg md:text-xl hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-blue-500/30 uppercase tracking-widest flex items-center justify-center">
-                            Continue to Payment
-                            <i data-lucide="arrow-right" class="ml-3 w-5 h-5 md:w-6 md:h-6"></i>
-                        </button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -180,7 +303,8 @@
                         <li><a href="../" class="hover:text-blue-500 transition-colors duration-300">Home</a></li>
                         <li><a href="../services/" class="hover:text-blue-500 transition-colors duration-300">Services</a></li>
                         <li><a href="../about/" class="hover:text-blue-500 transition-colors duration-300">About Us</a></li>
-                        <li><a href="./" class="hover:text-blue-500 transition-colors duration-300">Book Ride</a></li>
+                        <li><a href="./" class="hover:text-blue-500 transition-colors duration-300">Book Now</a></li>
+                        <li><a href="../contact/" class="hover:text-blue-500 transition-colors duration-300">Contact</a></li>
                         <li><a href="../privacy/" class="hover:text-blue-500 transition-colors duration-300">Privacy Policy</a></li>
                     </ul>
                 </div>
@@ -225,6 +349,36 @@
     <script>
         lucide.createIcons();
 
+        // Authentication & Navbar Logic
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const authOverlay = document.getElementById('auth-restriction-overlay');
+        const bookingCard = document.getElementById('booking-card');
+        const navAuthLink = document.getElementById('nav-auth-link');
+        const mobileAuthLink = document.getElementById('mobile-auth-link');
+
+        if (!isLoggedIn) {
+            if (authOverlay) authOverlay.classList.remove('hidden');
+            // Disable interactions on the booking card
+            if (bookingCard) {
+                const inputs = bookingCard.querySelectorAll('input, button');
+                inputs.forEach(input => input.disabled = true);
+            }
+        } else {
+            // Update Navigation for logged in user
+            [navAuthLink, mobileAuthLink].forEach(link => {
+                if (link) {
+                    link.textContent = 'Logout';
+                    link.href = '#';
+                    link.className = link.className.replace('text-blue-600', 'text-gray-600');
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        localStorage.removeItem('isLoggedIn');
+                        location.reload();
+                    });
+                }
+            });
+        }
+
         // Mobile Menu Toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -237,9 +391,97 @@
             lucide.createIcons();
         });
 
-        document.getElementById('bookingPageForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Your booking request has been received! Our system is matching you with a driver. You will receive a confirmation message shortly.');
+        // Booking State Management
+        const steps = {
+            content: [
+                document.getElementById('step-content-1'),
+                document.getElementById('step-content-2'),
+                document.getElementById('step-content-3')
+            ],
+            indicators: [
+                document.getElementById('step-indicator-1'),
+                document.getElementById('step-indicator-2'),
+                document.getElementById('step-indicator-3')
+            ]
+        };
+
+        let currentStep = 0;
+
+        function updateStepUI(newStep) {
+            steps.content.forEach((content, i) => {
+                content.classList.toggle('hidden', i !== newStep);
+            });
+
+            steps.indicators.forEach((indicator, i) => {
+                indicator.className = 'flex-1 py-4 md:py-6 text-center font-black uppercase tracking-widest transition-all duration-500 ';
+                if (i < newStep) {
+                    indicator.classList.add('bg-green-500', 'text-white');
+                } else if (i === newStep) {
+                    indicator.classList.add('bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-200');
+                } else {
+                    indicator.classList.add('bg-gray-50', 'text-gray-400');
+                }
+            });
+
+            currentStep = newStep;
+            window.scrollTo({ top: steps.content[newStep].offsetTop - 200, behavior: 'smooth' });
+            lucide.createIcons();
+        }
+
+        // Navigation Handlers
+        document.getElementById('next-to-step-2').addEventListener('click', () => {
+            // Validate Step 1
+            const pickup = document.getElementById('pickup').value;
+            const dropoff = document.getElementById('dropoff').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+
+            if (!pickup || !dropoff || !date || !time) {
+                alert('Please fill in all trip details first.');
+                return;
+            }
+
+            updateStepUI(1);
+        });
+
+        document.getElementById('next-to-step-3').addEventListener('click', () => {
+            // Collect All Data
+            const formData = {
+                pickup: document.getElementById('pickup').value,
+                dropoff: document.getElementById('dropoff').value,
+                date: document.getElementById('date').value,
+                time: document.getElementById('time').value,
+                service: document.querySelector('input[name="service"]:checked').value
+            };
+
+            // Calculate price based on selection
+            const prices = { standard: 25.00, premium: 45.00, van: 35.00 };
+            const price = prices[formData.service];
+
+            // Update Summary UI
+            document.querySelectorAll('#summary-pickup').forEach(el => el.textContent = formData.pickup);
+            document.querySelectorAll('#summary-dropoff').forEach(el => el.textContent = formData.dropoff);
+            document.querySelectorAll('#summary-datetime').forEach(el => el.textContent = `${formData.date} at ${formData.time}`);
+            document.querySelectorAll('#summary-service').forEach(el => el.textContent = formData.service);
+            document.querySelectorAll('#summary-price').forEach(el => el.textContent = `$${price.toFixed(2)}`);
+
+            updateStepUI(2);
+        });
+
+        document.getElementById('back-to-step-1').addEventListener('click', () => updateStepUI(0));
+        document.getElementById('back-to-step-2').addEventListener('click', () => updateStepUI(1));
+
+        document.getElementById('final-confirm-button').addEventListener('click', function() {
+            const btn = this;
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin mr-3"></i> Booking Your Ride...';
+            lucide.createIcons();
+
+            // Simulate API call and success
+            setTimeout(() => {
+                alert('Success! Your ride has been confirmed. A driver is on their way.');
+                window.location.href = '../';
+            }, 2000);
         });
     </script>
 </body>
