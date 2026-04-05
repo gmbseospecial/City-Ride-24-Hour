@@ -26,8 +26,8 @@
                     <a href="../" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Home</a>
                     <a href="../services/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Services</a>
                     <a href="./" class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1">About</a>
-                    <a href="../contact/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Contact</a>
                     <a href="../booking/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Booking</a>
+                    <a href="../contact/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Contact</a>
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="../auth/" id="nav-auth-link" class="hidden md:block text-blue-600 font-bold hover:text-blue-700 transition-colors">Login / Sign Up</a>
@@ -134,19 +134,19 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-950 text-white py-12 md:py-16">
+    <footer id="contact" class="bg-gray-950 text-white py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 mb-12">
-                <div class="col-span-1">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1">
                     <div class="flex items-center mb-6">
                         <i data-lucide="car" class="w-8 h-8 text-blue-500 mr-2"></i>
-                        <span class="text-2xl font-bold tracking-tight text-white">City<span class="text-blue-600">Ride</span><span class="text-orange-500">24H</span></span>
+                        <span class="text-2xl font-bold tracking-tight">City<span class="text-blue-500">Ride</span><span class="text-orange-500">24H</span></span>
                     </div>
-                    <p class="text-gray-400 leading-relaxed text-sm">Your 24/7 premium city ride partner. Safe, fast, and reliable transportation at the touch of a button.</p>
+                    <p class="text-gray-400 leading-relaxed">Your 24/7 premium city ride partner. Safe, fast, and reliable transportation at the touch of a button.</p>
                 </div>
                 <div>
                     <h4 class="text-lg font-bold mb-6 text-white border-l-4 border-blue-600 pl-3">Quick Links</h4>
-                    <ul class="space-y-4 text-gray-400 text-sm">
+                    <ul class="space-y-4 text-gray-400">
                         <li><a href="../" class="hover:text-blue-500 transition-colors duration-300">Home</a></li>
                         <li><a href="../services/" class="hover:text-blue-500 transition-colors duration-300">Services</a></li>
                         <li><a href="./" class="hover:text-blue-500 transition-colors duration-300">About Us</a></li>
@@ -157,7 +157,7 @@
                 </div>
                 <div>
                     <h4 class="text-lg font-bold mb-6 text-white border-l-4 border-blue-600 pl-3">Services</h4>
-                    <ul class="space-y-4 text-gray-400 text-sm">
+                    <ul class="space-y-4 text-gray-400">
                         <li>City Transfer</li>
                         <li>Airport Pickup</li>
                         <li>Corporate Travel</li>
@@ -168,30 +168,34 @@
                     <h4 class="text-lg font-bold mb-6 text-white border-l-4 border-blue-600 pl-3">Contact Us</h4>
                     <ul class="space-y-4 text-gray-400 text-sm">
                         <li class="flex items-center group">
-                            <i data-lucide="map-pin" class="w-5 h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform"></i>
-                            Rödernstraße 9, 63067 Offenbach am Main, Germany
+                            <i data-lucide="map-pin" class="w-4 h-4 md:w-5 md:h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform shrink-0"></i>
+                            <a href="https://maps.app.goo.gl/DRkmH3VM4SrMwTVx9" target="_blank" rel="noopener noreferrer" class="hover:text-blue-500 transition-colors leading-snug">
+                                Rödernstraße 9, 63067 Offenbach am Main, Germany
+                            </a>
                         </li>
                         <li class="flex items-center group">
-                            <i data-lucide="message-circle" class="w-5 h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform"></i>
-                            WhatsApp
+                            <i data-lucide="message-circle" class="w-4 h-4 md:w-5 md:h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform shrink-0"></i>
+                            <a href="https://api.whatsapp.com/send/?phone=923098586964&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" class="hover:text-blue-500 transition-colors">WhatsApp</a>
                         </li>
                         <li class="flex items-center group">
-                            <i data-lucide="mail" class="w-5 h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform"></i>
-                            felix@cityride24h.de
+                            <i data-lucide="mail" class="w-4 h-4 md:w-5 md:h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform shrink-0"></i>
+                            <a href="mailto:felix@cityride24.de" class="hover:text-blue-500 transition-colors leading-snug">
+                                felix@cityride24.de
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
             <div class="border-t border-gray-800 pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-gray-500 text-xs md:text-sm">© 2026 City Ride 24H. All rights reserved.</p>
-                    <div class="flex space-x-6 mt-6 md:mt-0">
+                    <p class="text-gray-500 text-sm">© 2026 City Ride 24H. All rights reserved.</p>
+                    <div class="flex space-x-6 mt-4 md:mt-0">
                         <a href="#" class="text-gray-500 hover:text-white transition"><i data-lucide="facebook"></i></a>
                         <a href="#" class="text-gray-500 hover:text-white transition"><i data-lucide="twitter"></i></a>
                         <a href="#" class="text-gray-500 hover:text-white transition"><i data-lucide="instagram"></i></a>
                     </div>
                 </div>
-                <p class="text-gray-600 text-[10px] md:text-xs text-center mt-8 pt-8 border-t border-gray-900/50">Designed by Ahsan S.</p>
+                <p class="text-gray-600 text-xs text-center mt-8 pt-8 border-t border-gray-900/50">Designed by Ahsan S.</p>
             </div>
         </div>
     </footer>
