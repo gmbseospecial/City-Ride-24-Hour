@@ -48,8 +48,8 @@
                 <a href="../" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">Home</a>
                 <a href="../services/" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">Services</a>
                 <a href="../about/" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">About</a>
-                <a href="../booking/" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">Booking</a>
                 <a href="./" class="block px-4 py-3 text-blue-600 font-bold bg-blue-50 rounded-xl">Contact</a>
+                <a href="../booking/" class="block px-4 py-3 text-gray-600 hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all font-medium">Booking</a>
                 <a href="../auth/" id="mobile-auth-link" class="block px-4 py-3 text-blue-600 font-bold bg-blue-50 rounded-xl">Login / Sign Up</a>
             </div>
         </div>
@@ -79,7 +79,11 @@
                             </div>
                             <div>
                                 <h3 class="text-lg md:text-xl font-black mb-2 uppercase tracking-tight">Main Hub</h3>
-                                <p class="text-gray-500 font-medium leading-relaxed text-sm md:text-base">Rödernstraße 9, 63067 Offenbach am Main, Germany</p>
+                                <p class="text-gray-500 font-medium leading-relaxed text-sm md:text-base">
+                                    <a href="https://maps.app.goo.gl/DRkmH3VM4SrMwTVx9" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition-colors">
+                                        Rödernstraße 9, 63067 Offenbach am Main, Germany
+                                    </a>
+                                </p>
                             </div>
                         </div>
                         <div class="flex items-start group">
@@ -88,7 +92,9 @@
                             </div>
                             <div>
                                 <h3 class="text-lg md:text-xl font-black mb-2 uppercase tracking-tight">24/7 Hotlines</h3>
-                                <p class="text-gray-500 font-medium leading-relaxed text-sm md:text-base">Connect to WhatsApp</p>
+                                <p class="text-gray-500 font-medium leading-relaxed text-sm md:text-base">
+                                    <a href="https://api.whatsapp.com/send/?phone=923098586964&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition-colors">Connect to WhatsApp</a>
+                                </p>
                             </div>
                         </div>
                         <div class="flex items-start group">
@@ -97,7 +103,10 @@
                             </div>
                             <div>
                                 <h3 class="text-lg md:text-xl font-black mb-2 uppercase tracking-tight">Email Channels</h3>
-                                <p class="text-gray-500 font-medium leading-relaxed text-sm md:text-base">General: felix@cityride24h.de<br>Support: support@cityride24h.de</p>
+                                <p class="text-gray-500 font-medium leading-relaxed text-sm md:text-base">
+                                    General: <a href="mailto:felix@cityride24.de" class="hover:text-blue-600 transition-colors">felix@cityride24.de</a><br>
+                                    Support: <a href="mailto:support@cityride24.de" class="hover:text-blue-600 transition-colors">support@cityride24.de</a>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -125,7 +134,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Phone Number</label>
-                                    <input type="tel" id="contact-phone" required class="w-full px-5 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium" placeholder="+1 (234) 567-890">
+                                    <input type="tel" id="contact-phone" required class="w-full px-5 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium" placeholder="+49 1512 3456789">
                                 </div>
                             </div>
                             <div>
@@ -153,13 +162,13 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-950 text-white py-16">
+    <footer id="contact" class="bg-gray-950 text-white py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-4 gap-12 mb-12">
                 <div class="col-span-1 md:col-span-1">
                     <div class="flex items-center mb-6">
                         <i data-lucide="car" class="w-8 h-8 text-blue-500 mr-2"></i>
-                        <span class="text-2xl font-bold tracking-tight text-white">City<span class="text-blue-600">Ride</span><span class="text-orange-500">24H</span></span>
+                        <span class="text-2xl font-bold tracking-tight">City<span class="text-blue-500">Ride</span><span class="text-orange-500">24H</span></span>
                     </div>
                     <p class="text-gray-400 leading-relaxed">Your 24/7 premium city ride partner. Safe, fast, and reliable transportation at the touch of a button.</p>
                 </div>
@@ -185,18 +194,22 @@
                 </div>
                 <div>
                     <h4 class="text-lg font-bold mb-6 text-white border-l-4 border-blue-600 pl-3">Contact Us</h4>
-                    <ul class="space-y-4 text-gray-400">
+                    <ul class="space-y-4 text-gray-400 text-sm">
                         <li class="flex items-center group">
-                            <i data-lucide="map-pin" class="w-5 h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform"></i>
-                            Rödernstraße 9, 63067 Offenbach am Main, Germany
+                            <i data-lucide="map-pin" class="w-4 h-4 md:w-5 md:h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform shrink-0"></i>
+                            <a href="https://maps.app.goo.gl/DRkmH3VM4SrMwTVx9" target="_blank" rel="noopener noreferrer" class="hover:text-blue-500 transition-colors leading-snug">
+                                Rödernstraße 9, 63067 Offenbach am Main, Germany
+                            </a>
                         </li>
                         <li class="flex items-center group">
-                            <i data-lucide="message-circle" class="w-5 h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform"></i>
-                            WhatsApp
+                            <i data-lucide="message-circle" class="w-4 h-4 md:w-5 md:h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform shrink-0"></i>
+                            <a href="https://api.whatsapp.com/send/?phone=923098586964&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" class="hover:text-blue-500 transition-colors">WhatsApp</a>
                         </li>
                         <li class="flex items-center group">
-                            <i data-lucide="mail" class="w-5 h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform"></i>
-                            felix@cityride24h.de
+                            <i data-lucide="mail" class="w-4 h-4 md:w-5 md:h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform shrink-0"></i>
+                            <a href="mailto:felix@cityride24.de" class="hover:text-blue-500 transition-colors leading-snug">
+                                felix@cityride24.de
+                            </a>
                         </li>
                     </ul>
                 </div>
