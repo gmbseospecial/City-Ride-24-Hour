@@ -36,8 +36,8 @@
                     <a href="../" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Home</a>
                     <a href="../services/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Services</a>
                     <a href="../about/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">About</a>
-                    <a href="../contact/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Contact</a>
                     <a href="./" class="text-blue-600 font-bold border-b-2 border-blue-600 pb-1">Booking</a>
+                    <a href="../contact/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300 font-medium">Contact</a>
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="../auth/" id="nav-auth-link" class="hidden md:block text-blue-600 font-bold hover:text-blue-700 transition-colors">Login / Sign Up</a>
@@ -127,6 +127,13 @@
                                     <input type="time" id="time" required class="w-full pl-14 pr-6 py-4 md:py-5 border-2 border-gray-100 rounded-[1.2rem] md:rounded-[1.5rem] focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium text-sm md:text-base">
                                 </div>
                             </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Phone Number (Germany)</label>
+                                <div class="relative group">
+                                    <i data-lucide="phone" class="absolute left-5 top-5 w-6 h-6 text-blue-500 group-focus-within:scale-110 transition-transform"></i>
+                                    <input type="tel" id="booking-phone" required class="w-full pl-14 pr-6 py-4 md:py-5 border-2 border-gray-100 rounded-[1.2rem] md:rounded-[1.5rem] focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all bg-gray-50 font-medium text-sm md:text-base" placeholder="+49 1512 3456789">
+                                </div>
+                            </div>
                         </div>
                         <button id="next-to-step-2" class="w-full bg-blue-600 text-white py-5 md:py-6 rounded-[1.2rem] md:rounded-[1.5rem] font-black text-lg md:text-xl hover:bg-blue-700 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-blue-500/30 uppercase tracking-widest flex items-center justify-center">
                             Select Vehicle
@@ -140,14 +147,29 @@
                             <h2 class="text-xl md:text-2xl font-black text-gray-900 uppercase tracking-tight">Available Fleets</h2>
                             <p class="text-gray-500 text-sm font-medium">Choose a ride that fits your comfort level</p>
                         </div>
+                        <div class="bg-blue-50 border border-blue-100 rounded-3xl p-5 md:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div class="flex items-center">
+                                <div class="bg-white p-3 rounded-2xl mr-4 border border-blue-100">
+                                    <i data-lucide="phone" class="w-6 h-6 text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Need Help?</p>
+                                    <p class="text-sm font-black text-gray-900 uppercase tracking-tight">Call Us (Germany)</p>
+                                </div>
+                            </div>
+                            <a href="https://api.whatsapp.com/send/?phone=923098586964&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto bg-green-600 text-white px-6 py-4 rounded-2xl font-black hover:bg-green-700 transition-all uppercase tracking-widest text-sm flex items-center justify-center">
+                                <span class="mr-2">WhatsApp</span>
+                                <i data-lucide="message-circle" class="w-5 h-5"></i>
+                            </a>
+                        </div>
                         <div class="grid grid-cols-1 gap-4 md:gap-6">
                             <!-- Economy -->
                             <label class="relative cursor-pointer group">
                                 <input type="radio" name="service" value="Economy" class="peer sr-only" checked>
-                                <div class="p-6 border-2 border-gray-100 rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50 flex items-center justify-between">
-                                    <div class="flex items-center space-x-6">
+                                <div class="p-6 border-2 border-gray-100 rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+                                    <div class="flex items-center space-x-4 sm:space-x-6">
                                         <div class="bg-gray-100 p-4 rounded-2xl group-hover:bg-white transition-colors">
-                                            <i data-lucide="car" class="w-10 h-10 text-gray-400 group-hover:text-blue-500"></i>
+                                            <i data-lucide="car" class="w-9 h-9 sm:w-10 sm:h-10 text-gray-400 group-hover:text-blue-500"></i>
                                         </div>
                                         <div>
                                             <h4 class="font-black text-gray-900 uppercase tracking-tight text-lg">Economy</h4>
@@ -157,19 +179,19 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="text-right">
-                                        <p class="text-2xl font-black text-blue-600">$25.00</p>
-                                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Est. Total</p>
+                                    <div class="text-left sm:text-right">
+                                        <p class="text-[11px] font-black text-blue-600 uppercase">Confirm with Driver</p>
+                                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Est. Fare</p>
                                     </div>
                                 </div>
                             </label>
                             <!-- Business -->
                             <label class="relative cursor-pointer group">
                                 <input type="radio" name="service" value="Business" class="peer sr-only">
-                                <div class="p-6 border-2 border-gray-100 rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50 flex items-center justify-between">
-                                    <div class="flex items-center space-x-6">
+                                <div class="p-6 border-2 border-gray-100 rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+                                    <div class="flex items-center space-x-4 sm:space-x-6">
                                         <div class="bg-gray-100 p-4 rounded-2xl group-hover:bg-white transition-colors">
-                                            <i data-lucide="gem" class="w-10 h-10 text-gray-400 group-hover:text-blue-500"></i>
+                                            <i data-lucide="gem" class="w-9 h-9 sm:w-10 sm:h-10 text-gray-400 group-hover:text-blue-500"></i>
                                         </div>
                                         <div>
                                             <h4 class="font-black text-gray-900 uppercase tracking-tight text-lg">Business</h4>
@@ -179,19 +201,19 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="text-right">
-                                        <p class="text-2xl font-black text-blue-600">$45.00</p>
-                                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Est. Total</p>
+                                    <div class="text-left sm:text-right">
+                                        <p class="text-[11px] font-black text-blue-600 uppercase">Confirm with Driver</p>
+                                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Est. Fare</p>
                                     </div>
                                 </div>
                             </label>
                             <!-- Van -->
                             <label class="relative cursor-pointer group">
                                 <input type="radio" name="service" value="Van" class="peer sr-only">
-                                <div class="p-6 border-2 border-gray-100 rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50 flex items-center justify-between">
-                                    <div class="flex items-center space-x-6">
+                                <div class="p-6 border-2 border-gray-100 rounded-3xl peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all duration-300 hover:bg-gray-50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+                                    <div class="flex items-center space-x-4 sm:space-x-6">
                                         <div class="bg-gray-100 p-4 rounded-2xl group-hover:bg-white transition-colors">
-                                            <i data-lucide="users" class="w-10 h-10 text-gray-400 group-hover:text-blue-500"></i>
+                                            <i data-lucide="users" class="w-9 h-9 sm:w-10 sm:h-10 text-gray-400 group-hover:text-blue-500"></i>
                                         </div>
                                         <div>
                                             <h4 class="font-black text-gray-900 uppercase tracking-tight text-lg">Van</h4>
@@ -201,9 +223,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="text-right">
-                                        <p class="text-2xl font-black text-blue-600">$35.00</p>
-                                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Est. Total</p>
+                                    <div class="text-left sm:text-right">
+                                        <p class="text-[11px] font-black text-blue-600 uppercase">Confirm with Driver</p>
+                                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Est. Fare</p>
                                     </div>
                                 </div>
                             </label>
@@ -265,8 +287,8 @@
                             </div>
                             <div class="pt-6 border-t border-gray-200">
                                 <div class="flex justify-between items-center">
-                                    <p class="text-sm font-black text-gray-900 uppercase tracking-tight">Estimated Total Cost</p>
-                                    <p id="summary-price" class="text-3xl font-black text-blue-600"></p>
+                                    <p class="text-sm font-black text-gray-900 uppercase tracking-tight">Fare</p>
+                                    <p id="summary-price" class="text-[11px] font-black text-blue-600 uppercase">Confirm with Driver</p>
                                 </div>
                             </div>
                         </div>
@@ -287,13 +309,13 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-950 text-white py-16">
+    <footer id="contact" class="bg-gray-950 text-white py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-4 gap-12 mb-12">
                 <div class="col-span-1 md:col-span-1">
                     <div class="flex items-center mb-6">
                         <i data-lucide="car" class="w-8 h-8 text-blue-500 mr-2"></i>
-                        <span class="text-2xl font-bold tracking-tight text-white">City<span class="text-blue-600">Ride</span><span class="text-orange-500">24H</span></span>
+                        <span class="text-2xl font-bold tracking-tight">City<span class="text-blue-500">Ride</span><span class="text-orange-500">24H</span></span>
                     </div>
                     <p class="text-gray-400 leading-relaxed">Your 24/7 premium city ride partner. Safe, fast, and reliable transportation at the touch of a button.</p>
                 </div>
@@ -319,18 +341,22 @@
                 </div>
                 <div>
                     <h4 class="text-lg font-bold mb-6 text-white border-l-4 border-blue-600 pl-3">Contact Us</h4>
-                    <ul class="space-y-4 text-gray-400">
+                    <ul class="space-y-4 text-gray-400 text-sm">
                         <li class="flex items-center group">
-                            <i data-lucide="map-pin" class="w-5 h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform"></i>
-                            Rödernstraße 9, 63067 Offenbach am Main, Germany
+                            <i data-lucide="map-pin" class="w-4 h-4 md:w-5 md:h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform shrink-0"></i>
+                            <a href="https://maps.app.goo.gl/DRkmH3VM4SrMwTVx9" target="_blank" rel="noopener noreferrer" class="hover:text-blue-500 transition-colors leading-snug">
+                                Rödernstraße 9, 63067 Offenbach am Main, Germany
+                            </a>
                         </li>
                         <li class="flex items-center group">
-                            <i data-lucide="message-circle" class="w-5 h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform"></i>
-                            WhatsApp
+                            <i data-lucide="message-circle" class="w-4 h-4 md:w-5 md:h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform shrink-0"></i>
+                            <a href="https://api.whatsapp.com/send/?phone=923098586964&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" class="hover:text-blue-500 transition-colors">WhatsApp</a>
                         </li>
                         <li class="flex items-center group">
-                            <i data-lucide="mail" class="w-5 h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform"></i>
-                            felix@cityride24h.de
+                            <i data-lucide="mail" class="w-4 h-4 md:w-5 md:h-5 mr-3 text-blue-500 group-hover:scale-110 transition-transform shrink-0"></i>
+                            <a href="mailto:felix@cityride24.de" class="hover:text-blue-500 transition-colors leading-snug">
+                                felix@cityride24.de
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -453,8 +479,9 @@
             const dropoff = document.getElementById('dropoff').value;
             const date = document.getElementById('date').value;
             const time = document.getElementById('time').value;
+            const phone = document.getElementById('booking-phone').value;
 
-            if (!pickup || !dropoff || !date || !time) {
+            if (!pickup || !dropoff || !date || !time || !phone) {
                 alert('Please fill in all trip details first.');
                 return;
             }
@@ -468,17 +495,14 @@
                 dropoff: document.getElementById('dropoff').value,
                 date: document.getElementById('date').value,
                 time: document.getElementById('time').value,
+                phone: document.getElementById('booking-phone').value,
                 vehicleType: document.querySelector('input[name="service"]:checked').value
             };
-
-            const prices = { Economy: 25.00, Business: 45.00, Van: 35.00 };
-            const price = prices[currentBookingData.vehicleType];
 
             document.querySelectorAll('#summary-pickup').forEach(el => el.textContent = currentBookingData.pickup);
             document.querySelectorAll('#summary-dropoff').forEach(el => el.textContent = currentBookingData.dropoff);
             document.querySelectorAll('#summary-datetime').forEach(el => el.textContent = `${currentBookingData.date} at ${currentBookingData.time}`);
             document.querySelectorAll('#summary-service').forEach(el => el.textContent = currentBookingData.vehicleType);
-            document.querySelectorAll('#summary-price').forEach(el => el.textContent = `$${price.toFixed(2)}`);
 
             updateStepUI(2);
         });
